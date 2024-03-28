@@ -1,9 +1,9 @@
 const cacheName = "DefaultCompany-PBR Maps Generator-0.1";
 const contentToCache = [
     "Build/test_build.loader.js",
-    "Build/test_build.framework.js.gz",
-    "Build/test_build.data.gz",
-    "Build/test_build.wasm.gz",
+    "Build/test_build.framework.js",
+    "Build/test_build.data",
+    "Build/test_build.wasm",
     "TemplateData/style.css"
 
 ];
