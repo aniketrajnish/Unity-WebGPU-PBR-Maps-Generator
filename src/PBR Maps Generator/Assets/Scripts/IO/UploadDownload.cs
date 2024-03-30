@@ -8,11 +8,18 @@ public class UploadDownload : MonoBehaviour
 
     [DllImport("__Internal")]
     private static extern void UploadImage();
+    [DllImport("__Internal")]
+    private static extern void DownloadImage(string base64Data, string fileName);
 
     public void OnUploadBtnClick()
     {
         if (Application.platform == RuntimePlatform.WebGLPlayer)
             UploadImage();        
+    }
+    public void OnDownloadBtnClick()
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+            DownloadImage(baseMapHolder.sprite.texture);        
     }
     public void LoadImage(string imgDataUrl)
     {
@@ -25,4 +32,12 @@ public class UploadDownload : MonoBehaviour
         else 
             Debug.LogError("Failed to load image");
     }
+    public void DownloadImage(Texture2D imageToDownload)
+    {
+        byte[] imgBytes = imageToDownload.EncodeToPNG();
+        string base64img = System.Convert.ToBase64String(imgBytes);
+
+        DownloadImage(base64img, "image.png");
+    }
+
 }
