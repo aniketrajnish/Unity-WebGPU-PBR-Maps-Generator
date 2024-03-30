@@ -1,0 +1,12 @@
+public enum Maps
+{
+    ALBEDO,
+    NORMAL,
+    METALLIC,
+    ROUGHNESS,
+    AMBIENT_OCCLUSION,
+    EMISSION,
+    HEIGHT,
+    SPECULAR,
+    OPACITY
+}
