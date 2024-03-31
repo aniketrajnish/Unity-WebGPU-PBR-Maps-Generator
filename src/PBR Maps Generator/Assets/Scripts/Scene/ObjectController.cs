@@ -12,13 +12,10 @@ public class ObjectController : MonoBehaviour
     [SerializeField] GameObject instructionsPanel;
 
     int meshIndex = 0;
-    float minScale = 0.5f, maxScale = 1.5f;
+    float minScale = 0.5f, maxScale = 1.5f, timeCheck;
     Vector3 randomDir, dragOrigin;
     bool isDraggingObject = false, isDraggingSun = false;
-    private void Start()
-    {
-        AssignRandDir();
-    }
+    private void Start() => AssignRandDir();    
     private void Update()
     {
         CheckDrag();        
@@ -34,8 +31,14 @@ public class ObjectController : MonoBehaviour
             dragOrigin = Input.mousePosition;
             isDraggingObject = true;
         }
+        if (Input.GetMouseButton(0))
+            timeCheck += Time.deltaTime;
+
         if (Input.GetMouseButtonUp(0))
+        {
+            timeCheck = 0;
             isDraggingObject = false;
+        }
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -85,6 +88,9 @@ public class ObjectController : MonoBehaviour
     }
     public void SwitchMesh()
     {
+        if (timeCheck > .25f)
+            return;
+
         meshIndex = (meshIndex + 1) % meshes.Length;
         meshHolder.mesh = meshes[meshIndex];
 
