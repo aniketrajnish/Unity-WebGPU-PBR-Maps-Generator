@@ -1,12 +1,21 @@
-public enum Maps
+public enum InputMaps
 {
-    ALBEDO,
-    NORMAL,
-    METALLIC,
-    ROUGHNESS,
-    AMBIENT_OCCLUSION,
-    EMISSION,
+    BASE,
+    DIFFUSE
+}
+public enum CommonMaps
+{  
     HEIGHT,
+    NORMAL,
+    AMBIENT_OCCLUSION
+}
+public enum MRMaps
+{    
+    METALLIC,
+    ROUGHNESS
+}
+public enum SGMaps
+{
     SPECULAR,
-    OPACITY
+    GLOSSINESS
 }
