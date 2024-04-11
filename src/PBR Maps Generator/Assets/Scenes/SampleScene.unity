@@ -998,13 +998,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbab434b22264454c95f96630eba5c5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapLabelFields:
-  - {fileID: 1733900257}
-  - {fileID: 833242793}
-  - {fileID: 676737996}
-  - {fileID: 521439221}
-  - {fileID: 1975387437}
-  - {fileID: 1338147537}
+  mapFrameGOs:
+  - {fileID: 1179314679}
+  - {fileID: 205363432}
+  - {fileID: 323355180}
+  - {fileID: 445013607}
+  - {fileID: 783365545}
+  - {fileID: 615171083}
   currentInput: 0
 --- !u!1 &445013607
 GameObject:
@@ -1434,7 +1434,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: Ambient Occlussion
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
@@ -1859,7 +1859,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: 'Normal
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
@@ -2449,7 +2451,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: 'Height
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
@@ -3750,7 +3754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: Roughness
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
@@ -4508,7 +4512,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: 'Base
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
@@ -5066,7 +5072,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Base Map
+  m_text: Metallic
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
   m_sharedMaterial: {fileID: 3616365008217242107, guid: e41a379d7187a6745bf5e17789b7fecd, type: 2}
