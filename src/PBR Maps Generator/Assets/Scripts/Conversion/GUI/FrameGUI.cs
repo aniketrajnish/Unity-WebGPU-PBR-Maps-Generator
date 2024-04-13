@@ -34,7 +34,6 @@ public class WindowGUI : MonoBehaviour
                     mapFrames[i].mapLabelField.text = EnumString(sgMapLabels.ElementAt(i - 4).Key);                
                 break;
         }
-
     }
     void InitializeFrames()
     {

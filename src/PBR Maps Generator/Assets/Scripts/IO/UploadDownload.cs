@@ -21,7 +21,7 @@ public class UploadDownload : MonoBehaviour
 #if UNITY_EDITOR
         else
         {
-            string path = EditorUtility.OpenFilePanel("Load image", "", "png,jpg,jpeg");
+            string path = EditorUtility.OpenFilePanel("Load image", "", "png,jpg,jpeg,tif,tiff");
             if (!string.IsNullOrEmpty(path))
             {
                 LoadImageFromFile(path);
@@ -29,14 +29,14 @@ public class UploadDownload : MonoBehaviour
         }
 #endif
     }
-    public void OnDownloadBtnClick()
+    public void OnDownloadBtnClick(string fileName, string extension)
     {
         if (Application.platform == RuntimePlatform.WebGLPlayer)
             DownloadImage(baseMapHolder.sprite.texture);
 #if UNITY_EDITOR
         else if (baseMapHolder.sprite.texture != null)
         {
-            string path = EditorUtility.SaveFilePanel("Save image as PNG", "", "downloadedImage", "png");
+            string path = EditorUtility.SaveFilePanel("Save image as PNG", "", fileName, extension);
             if (!string.IsNullOrEmpty(path))
             {
                 Texture2D imageToDownload = baseMapHolder.sprite.texture as Texture2D;
