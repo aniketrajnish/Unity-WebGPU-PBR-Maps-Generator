@@ -1,4 +1,4 @@
-const cacheName = "DefaultCompany-PBR Maps Generator-0.1";
+const cacheName = "makra-PBR Maps Generator-0.1";
 const contentToCache = [
     "Build/test_build.loader.js",
     "Build/test_build.framework.js",
