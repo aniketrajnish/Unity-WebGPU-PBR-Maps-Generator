@@ -2,6 +2,5 @@ enum ImageExtensions
 {
     PNG,
     JPG,
-    EXR,
-    TGA
+    JPEG
 }

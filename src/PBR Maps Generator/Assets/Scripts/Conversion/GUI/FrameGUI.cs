@@ -8,7 +8,8 @@ using System;
 public class FrameGUI : MonoBehaviour
 {
     [SerializeField] List<GameObject> mapFrameGOs;
-    List<MapFrame> mapFrames;
+    [SerializeField] UploadDownload io;
+    public List<MapFrame> mapFrames;
     Dictionary<string, InputMaps> inputMapLabels;
     Dictionary<string, CommonMaps> commonMapLabels;
     Dictionary<string, MRMaps> mrMapLabels;
@@ -42,11 +43,16 @@ public class FrameGUI : MonoBehaviour
 
         foreach (GameObject go in mapFrameGOs)
         {
-            Image mapImage = go.transform.GetComponentsInChildren<Image>()[1];
+            Image mapImage = go.transform.GetComponentsInChildren<Image>()[2];
             TextMeshProUGUI mapLabelField = go.transform.GetComponentInChildren<TextMeshProUGUI>();
             Button downloadBtn = go.transform.GetComponentInChildren<Button>();
 
             mapFrames.Add(new MapFrame(mapImage, mapLabelField, downloadBtn));
+
+            if (mapLabelField.text.Trim() != "Base")
+                downloadBtn.onClick.AddListener(() => io.OnDownloadBtnClick(io.inputMapFileName 
+                    + "_" + mapLabelField.text.Trim(), io.inputMapExtension, 
+                    FixTexture.UncompressAndExposeTexture(mapImage.sprite.texture)));                
         }
     }
     void CreateMapLabelDictionaries()
