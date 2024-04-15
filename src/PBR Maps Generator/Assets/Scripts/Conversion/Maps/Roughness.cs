@@ -1,5 +1,5 @@
 using UnityEngine;
-public static class RougnnessMap
+public static class RoughnessMap
 {
     public static Texture2D ConvertToRoughnessMap(Texture2D baseMap)
     {

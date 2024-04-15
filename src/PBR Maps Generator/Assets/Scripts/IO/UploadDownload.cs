@@ -21,7 +21,7 @@ public class UploadDownload : MonoBehaviour
 #if UNITY_EDITOR
         else
         {
-            string path = EditorUtility.OpenFilePanel("Load image", "", "png,jpg,jpeg,tif,tiff");
+            string path = EditorUtility.OpenFilePanel("Load image", "", "png,jpg,exr,tga");
             if (!string.IsNullOrEmpty(path))
             {
                 LoadImageFromFile(path);
@@ -36,13 +36,36 @@ public class UploadDownload : MonoBehaviour
 #if UNITY_EDITOR
         else if (baseMapHolder.sprite.texture != null)
         {
-            string path = EditorUtility.SaveFilePanel("Save image as PNG", "", fileName, extension);
+            string path = EditorUtility.SaveFilePanel("Save image", "", fileName, extension);
             if (!string.IsNullOrEmpty(path))
             {
                 Texture2D imageToDownload = baseMapHolder.sprite.texture as Texture2D;
-                byte[] imgBytes = imageToDownload.EncodeToPNG();
-                System.IO.File.WriteAllBytes(path, imgBytes);
-                Debug.Log("Saved image to " + path);
+
+                byte[] imgBytes = null;
+
+                switch (extension)
+                {
+                    case "png":
+                        imgBytes = imageToDownload.EncodeToPNG();
+                        break;
+                    case "jpg":
+                        imgBytes = imageToDownload.EncodeToJPG();
+                        break;
+                    case "exr":
+                        imgBytes = imageToDownload.EncodeToEXR();
+                        break;
+                    case "tga":
+                        imgBytes = imageToDownload.EncodeToTGA();
+                        break;
+                    default:
+                        Debug.LogError("Invalid extension");
+                        break;
+                }
+                if (imgBytes != null)
+                {
+                    System.IO.File.WriteAllBytes(path, imgBytes);
+                    Debug.Log("Saved image to " + path);
+                }
             }
         }
 #endif

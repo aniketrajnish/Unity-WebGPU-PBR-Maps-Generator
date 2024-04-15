@@ -4,7 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
-public class WindowGUI : MonoBehaviour
+using System;
+public class FrameGUI : MonoBehaviour
 {
     [SerializeField] List<GameObject> mapFrameGOs;
     List<MapFrame> mapFrames;
@@ -66,7 +67,31 @@ public class WindowGUI : MonoBehaviour
         foreach (SGMaps map in System.Enum.GetValues(typeof(SGMaps)))
             sgMapLabels.Add(EnumString(map.ToString()), map);
     }
+    public void UpdateTextures()
+    {
+        Texture2D inputMap = mapFrames[0].mapImage.sprite.texture;
 
+        ConvertTextureAndUpdateFrame(inputMap, HeightMap.ConvertToHeightMap, 1);
+        ConvertTextureAndUpdateFrame(inputMap, NormalMap.ConvertToNormalMap, 2);
+        ConvertTextureAndUpdateFrame(inputMap, AOMap.ConvertToAOMap, 3);
+
+        switch (currentInput)
+        {
+            case InputMaps.BASE:
+                ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap, 4);
+                ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap, 5);
+                break;
+            case InputMaps.DIFFUSE:
+                ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap, 4);
+                ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap, 5);
+                break;
+        }
+    }
+    private void ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm, int frameIndex)
+    {
+        Texture2D outputTexture = conversionAlgorithm(inputTexture);
+        mapFrames[frameIndex].mapImage.sprite = Sprite.Create(outputTexture, new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
+    }
     public void OnMRToggleClicked() => AssignLabels(currentInput = InputMaps.BASE);
     public void OnSGToggleClicked() => AssignLabels(currentInput = InputMaps.DIFFUSE);
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
