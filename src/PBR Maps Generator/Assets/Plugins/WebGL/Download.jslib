@@ -4,7 +4,7 @@ mergeInto(LibraryManager.library, {
     var mimeTypes = {
       'png': 'image/png',
       'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg'
+      'jpeg': 'image/jpeg',
       'exr': 'image/exr', 
       'tga': 'image/tga' 
     }; // only formats supported by Unity encoding
