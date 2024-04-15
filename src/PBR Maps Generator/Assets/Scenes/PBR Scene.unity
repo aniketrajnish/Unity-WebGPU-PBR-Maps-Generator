@@ -4954,9 +4954,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7ef079226a3a8b41bf3b4a8d546aa5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputMapHolder: {fileID: 878512797}
-  inputMapFileName: Tex
-  inputMapExtension: .png
+  uploadImgHolder: {fileID: 878512797}
+  uploadImgFileName: Tex
+  uploadImgExtension: .png
 --- !u!1 &1969451283
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using UnityEngine.UI;
 using System.IO;
-using System.Text.RegularExpressions;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor; 
@@ -10,8 +10,9 @@ using UnityEditor;
 
 public class UploadDownload : MonoBehaviour
 {
-    [SerializeField] private Image inputMapHolder;
-    public string inputMapFileName, inputMapExtension;
+    [SerializeField] private Image uploadImgHolder;
+    public string uploadImgFileName, uploadImgExtension;
+    public event Action<Texture2D> OnImageLoaded;
 
     [DllImport("__Internal")]
     private static extern void jsUploadImage();
@@ -36,7 +37,7 @@ public class UploadDownload : MonoBehaviour
         if (Application.platform == RuntimePlatform.WebGLPlayer)
             DownloadImage(downloadTex, fileName, extension);
 #if UNITY_EDITOR
-        else if (inputMapHolder.sprite.texture != null)
+        else if (uploadImgHolder.sprite.texture != null)
         {
             string path = EditorUtility.SaveFilePanel("Save Image", "", fileName, extension);
             print(fileName);
@@ -61,9 +62,10 @@ public class UploadDownload : MonoBehaviour
 
             if (tex.LoadImage(imgBytes))
             {
-                inputMapHolder.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                inputMapFileName = Path.GetFileNameWithoutExtension(fileName);
-                inputMapExtension = Path.GetExtension(fileName).TrimStart('.');
+                uploadImgHolder.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                uploadImgFileName = Path.GetFileNameWithoutExtension(fileName);
+                uploadImgExtension = Path.GetExtension(fileName).TrimStart('.');
+                OnImageLoaded?.Invoke(tex);
             }
             else
                 Debug.LogError("Failed to load image");
@@ -105,9 +107,10 @@ public class UploadDownload : MonoBehaviour
         Texture2D tex = new Texture2D(2, 2);
         if (tex.LoadImage(fileData)) // Automatically resizes the texture dimensions.
         {
-            inputMapHolder.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            inputMapFileName = Path.GetFileNameWithoutExtension(filePath);
-            inputMapExtension = Path.GetExtension(filePath).TrimStart('.');
+            uploadImgHolder.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            uploadImgFileName = Path.GetFileNameWithoutExtension(filePath);
+            uploadImgExtension = Path.GetExtension(filePath).TrimStart('.');
+            OnImageLoaded?.Invoke(tex);
         }
         else
             Debug.LogError("Failed to load image from file");

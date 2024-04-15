@@ -5,11 +5,11 @@ public struct MapFrame
 {
     public Image mapImage;
     public TextMeshProUGUI mapLabelField;
-    public Button downloadBtn;
-    public MapFrame(Image _mapImage, TextMeshProUGUI _mapLabelField, Button _downloadBtn)
+    public Button btn;
+    public MapFrame(Image _mapImage, TextMeshProUGUI _mapLabelField, Button _btn)
     {
         mapImage = _mapImage;
         mapLabelField = _mapLabelField;
-        downloadBtn = _downloadBtn;
+        btn = _btn;
     }
 }

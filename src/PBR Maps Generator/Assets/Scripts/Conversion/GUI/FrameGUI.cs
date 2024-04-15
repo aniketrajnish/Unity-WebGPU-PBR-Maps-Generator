@@ -15,6 +15,8 @@ public class FrameGUI : MonoBehaviour
     Dictionary<string, MRMaps> mrMapLabels;
     Dictionary<string, SGMaps> sgMapLabels;
     [HideInInspector] public InputMaps currentInput = InputMaps.BASE;
+    private void Awake() => io.OnImageLoaded += UpdateTextures;  
+    private void OnDestroy() => io.OnImageLoaded -= UpdateTextures;
     private void Start()
     {
         CreateMapLabelDictionaries();
@@ -45,13 +47,13 @@ public class FrameGUI : MonoBehaviour
         {
             Image mapImage = go.transform.GetComponentsInChildren<Image>()[2];
             TextMeshProUGUI mapLabelField = go.transform.GetComponentInChildren<TextMeshProUGUI>();
-            Button downloadBtn = go.transform.GetComponentInChildren<Button>();
+            Button btn = go.transform.GetComponentInChildren<Button>();
 
-            mapFrames.Add(new MapFrame(mapImage, mapLabelField, downloadBtn));
+            mapFrames.Add(new MapFrame(mapImage, mapLabelField, btn));
 
             if (mapLabelField.text.Trim() != "Base")
-                downloadBtn.onClick.AddListener(() => io.OnDownloadBtnClick(io.inputMapFileName 
-                    + "_" + mapLabelField.text.Trim(), io.inputMapExtension, 
+                btn.onClick.AddListener(() => io.OnDownloadBtnClick(io.uploadImgFileName 
+                    + "_" + mapLabelField.text.Trim(), io.uploadImgExtension, 
                     FixTexture.UncompressAndExposeTexture(mapImage.sprite.texture)));                
         }
     }
@@ -73,10 +75,8 @@ public class FrameGUI : MonoBehaviour
         foreach (SGMaps map in System.Enum.GetValues(typeof(SGMaps)))
             sgMapLabels.Add(EnumString(map.ToString()), map);
     }
-    public void UpdateTextures()
+    public void UpdateTextures(Texture2D inputMap)
     {
-        Texture2D inputMap = mapFrames[0].mapImage.sprite.texture;
-
         ConvertTextureAndUpdateFrame(inputMap, HeightMap.ConvertToHeightMap, 1);
         ConvertTextureAndUpdateFrame(inputMap, NormalMap.ConvertToNormalMap, 2);
         ConvertTextureAndUpdateFrame(inputMap, AOMap.ConvertToAOMap, 3);
@@ -96,7 +96,8 @@ public class FrameGUI : MonoBehaviour
     private void ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm, int frameIndex)
     {
         Texture2D outputTexture = conversionAlgorithm(inputTexture);
-        mapFrames[frameIndex].mapImage.sprite = Sprite.Create(outputTexture, new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
+        mapFrames[frameIndex].mapImage.sprite = Sprite.Create(outputTexture, 
+            new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
     }
     public void OnMRToggleClicked() => AssignLabels(currentInput = InputMaps.BASE);
     public void OnSGToggleClicked() => AssignLabels(currentInput = InputMaps.DIFFUSE);
