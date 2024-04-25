@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 
-public class ObjectController : MonoBehaviour
+public class PlaceholderObjectGUI : MonoBehaviour
 {
     [SerializeField] float rotSpeed = 100f, dragSpeed = 100f, scaleSpeed = 100f;
     [SerializeField] Transform sun;
     [SerializeField] Mesh[] meshes;
     [SerializeField] MeshFilter meshHolder;
+    [SerializeField] public Material objectMaterial;
     [SerializeField] GameObject instructionsPanel;
 
     int meshIndex = 0;
     float minScale = 0.5f, maxScale = 1.5f, timeCheck;
     Vector3 randomDir, dragOrigin;
     bool isDraggingObject = false, isDraggingSun = false;
-    private void Start() => AssignRandDir();    
+    private void Start() => AssignRandDir();
     private void Update()
     {
-        CheckDrag();        
+        CheckDrag();
         ObjectRotControls();
         ObjectScaleControls();
         SunRotControls();
@@ -67,8 +68,8 @@ public class ObjectController : MonoBehaviour
     {
         Vector3 objectScale = transform.localScale + Vector3.one * Input.mouseScrollDelta.y * scaleSpeed * Time.deltaTime;
 
-        objectScale = new Vector3(Mathf.Clamp(objectScale.x, minScale, maxScale), 
-            Mathf.Clamp(objectScale.y, minScale, maxScale), 
+        objectScale = new Vector3(Mathf.Clamp(objectScale.x, minScale, maxScale),
+            Mathf.Clamp(objectScale.y, minScale, maxScale),
             Mathf.Clamp(objectScale.z, minScale, maxScale));
 
         transform.localScale = objectScale;
@@ -110,4 +111,39 @@ public class ObjectController : MonoBehaviour
         }
     }
     public void EnableDisableInstructionsPanel() => instructionsPanel.SetActive(!instructionsPanel.activeSelf);
+#nullable enable
+    public void UpdateMaterialTextures(Texture2D? baseMap = null, Texture2D? diffuseMap = null, Texture2D? heightMap = null, Texture2D? normalMap = null, Texture2D? aoMap = null, Texture2D? metallicMap = null, Texture2D? roughnessMap = null, Texture2D? specularMap = null, Texture2D? glossinessMap = null)
+    {
+        if (baseMap != null) objectMaterial.SetTexture("_MainTex", baseMap);
+        if (diffuseMap != null) objectMaterial.SetTexture("_MainTex", diffuseMap);
+        if (heightMap != null)
+        {
+            objectMaterial.SetTexture("_ParallaxMap", heightMap);
+            objectMaterial.SetFloat("_Parallax", 0.08f);
+        }
+        if (normalMap != null)
+        {
+            objectMaterial.SetTexture("_BumpMap", normalMap);
+            objectMaterial.SetFloat("_BumpScale", 1.0f);
+        }
+        if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);
+
+        /*if (specularMap != null && glossinessMap != null)
+        {
+            objectMaterial.shader = Shader.Find("Standard (Specular setup)");
+            objectMaterial.SetTexture("_SpecGlossMap", specularMap);
+            objectMaterial.SetColor("_SpecColor", specularMap.GetPixel(0, 0));
+            objectMaterial.SetFloat("_Glossiness", glossinessMap.GetPixel(0, 0).r); 
+                                                                                   
+        }
+        else if (metallicMap != null && roughnessMap != null)
+        {
+            objectMaterial.shader = Shader.Find("Standard");
+            objectMaterial.SetTexture("_MetallicGlossMap", metallicMap);
+            objectMaterial.SetFloat("_Metallic", 1.0f);
+            objectMaterial.SetFloat("_Glossiness", roughnessMap.GetPixel(0, 0).r); 
+        }*/
+        objectMaterial.shader = objectMaterial.shader;
+    }
+#nullable disable
 }

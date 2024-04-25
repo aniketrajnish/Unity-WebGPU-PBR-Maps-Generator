@@ -677,6 +677,7 @@ MonoBehaviour:
   - {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   - {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   meshHolder: {fileID: 514706795}
+  objectMaterial: {fileID: 2100000, guid: f646d856021e10243a72f50d09f02f25, type: 2}
   instructionsPanel: {fileID: 503715794}
 --- !u!1 &314785066
 GameObject:
@@ -1010,6 +1011,7 @@ MonoBehaviour:
   - {fileID: 783365545}
   - {fileID: 615171083}
   io: {fileID: 1958931920}
+  pog: {fileID: 246294541}
   currentInput: 0
 --- !u!1 &445013607
 GameObject:

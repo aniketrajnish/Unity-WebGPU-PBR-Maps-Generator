@@ -9,13 +9,15 @@ public class FrameGUI : MonoBehaviour
 {
     [SerializeField] List<GameObject> mapFrameGOs;
     [SerializeField] UploadDownload io;
+    [SerializeField] PlaceholderObjectGUI pog;
     public List<MapFrame> mapFrames;
     Dictionary<string, InputMaps> inputMapLabels;
     Dictionary<string, CommonMaps> commonMapLabels;
     Dictionary<string, MRMaps> mrMapLabels;
     Dictionary<string, SGMaps> sgMapLabels;
+    Dictionary<string, Texture2D> generatedMaps = new Dictionary<string, Texture2D>();
     [HideInInspector] public InputMaps currentInput = InputMaps.BASE;
-    private void Awake() => io.OnImageLoaded += UpdateTextures;  
+    private void Awake() => io.OnImageLoaded += UpdateTextures;
     private void OnDestroy() => io.OnImageLoaded -= UpdateTextures;
     private void Start()
     {
@@ -30,12 +32,12 @@ public class FrameGUI : MonoBehaviour
         switch (_currentInput)
         {
             case InputMaps.BASE:
-                for (int i = 4; i < mapFrameGOs.Count; i++)    
+                for (int i = 4; i < mapFrameGOs.Count; i++)
                     mapFrames[i].mapLabelField.text = EnumString(mrMapLabels.ElementAt(i - 4).Key);
                 break;
-            case InputMaps.DIFFUSE: 
+            case InputMaps.DIFFUSE:
                 for (int i = 4; i < mapFrameGOs.Count; i++)
-                    mapFrames[i].mapLabelField.text = EnumString(sgMapLabels.ElementAt(i - 4).Key);                
+                    mapFrames[i].mapLabelField.text = EnumString(sgMapLabels.ElementAt(i - 4).Key);
                 break;
         }
     }
@@ -52,9 +54,9 @@ public class FrameGUI : MonoBehaviour
             mapFrames.Add(new MapFrame(mapImage, mapLabelField, btn));
 
             if (mapLabelField.text.Trim() != "Base")
-                btn.onClick.AddListener(() => io.OnDownloadBtnClick(io.uploadImgFileName 
-                    + "_" + mapLabelField.text.Trim(), io.uploadImgExtension, 
-                    FixTexture.UncompressAndExposeTexture(mapImage.sprite.texture)));                
+                btn.onClick.AddListener(() => io.OnDownloadBtnClick(io.uploadImgFileName
+                    + "_" + mapLabelField.text.Trim(), io.uploadImgExtension,
+                    FixTexture.UncompressAndExposeTexture(mapImage.sprite.texture)));
         }
     }
     void CreateMapLabelDictionaries()
@@ -77,29 +79,74 @@ public class FrameGUI : MonoBehaviour
     }
     public void UpdateTextures(Texture2D inputMap)
     {
-        ConvertTextureAndUpdateFrame(inputMap, HeightMap.ConvertToHeightMap, 1);
-        ConvertTextureAndUpdateFrame(inputMap, NormalMap.ConvertToNormalMap, 2);
-        ConvertTextureAndUpdateFrame(inputMap, AOMap.ConvertToAOMap, 3);
+        generatedMaps["Height"] = ConvertTextureAndUpdateFrame(inputMap, HeightMap.ConvertToHeightMap, 1);
+        generatedMaps["Normal"] = ConvertTextureAndUpdateFrame(inputMap, NormalMap.ConvertToNormalMap, 2);
+        generatedMaps["AO"] = ConvertTextureAndUpdateFrame(inputMap, AOMap.ConvertToAOMap, 3);
 
         switch (currentInput)
         {
             case InputMaps.BASE:
-                ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap, 4);
-                ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap, 5);
+
+                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap, 4);
+                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap, 5);
+
+                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap);
+                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap);
+
+                pog.UpdateMaterialTextures(baseMap: inputMap, 
+                    heightMap: generatedMaps["Height"], 
+                    normalMap: generatedMaps["Normal"], 
+                    aoMap: generatedMaps["AO"], 
+                    metallicMap: generatedMaps["Metallic"], 
+                    roughnessMap: generatedMaps["Roughness"]);
+
                 break;
+
             case InputMaps.DIFFUSE:
-                ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap, 4);
-                ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap, 5);
+                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap, 4);
+                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap, 5);
+
+                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap);
+                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap);
+
+                pog.UpdateMaterialTextures(diffuseMap: inputMap, 
+                    heightMap: generatedMaps["Height"], 
+                    normalMap: generatedMaps["Normal"], 
+                    aoMap: generatedMaps["AO"], 
+                    specularMap: generatedMaps["Specular"], 
+                    glossinessMap: generatedMaps["Glossiness"]);
+
                 break;
         }
     }
-    private void ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm, int frameIndex)
+    private Texture2D ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm) => conversionAlgorithm(inputTexture);
+    private Texture2D ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm, int frameIndex)
     {
         Texture2D outputTexture = conversionAlgorithm(inputTexture);
-        mapFrames[frameIndex].mapImage.sprite = Sprite.Create(outputTexture, 
-            new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
+        if (mapFrames[frameIndex].mapImage.sprite.texture != outputTexture)
+            mapFrames[frameIndex].mapImage.sprite = Sprite.Create(outputTexture,
+                    new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
+        return outputTexture;
     }
-    public void OnMRToggleClicked() => AssignLabels(currentInput = InputMaps.BASE);
-    public void OnSGToggleClicked() => AssignLabels(currentInput = InputMaps.DIFFUSE);
+    public void OnMRToggleClicked()
+    {
+        AssignLabels(currentInput = InputMaps.BASE);
+        mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Metallic"],
+                new Rect(0, 0, generatedMaps["Metallic"].width, generatedMaps["Metallic"].height), new Vector2(0.5f, 0.5f));
+        mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Roughness"],
+                new Rect(0, 0, generatedMaps["Roughness"].width, generatedMaps["Roughness"].height), new Vector2(0.5f, 0.5f));
+
+        pog.UpdateMaterialTextures(metallicMap: generatedMaps["Metallic"], roughnessMap: generatedMaps["Roughness"]);
+    }
+    public void OnSGToggleClicked()
+    {
+        AssignLabels(currentInput = InputMaps.DIFFUSE);
+        mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Specular"],
+                           new Rect(0, 0, generatedMaps["Specular"].width, generatedMaps["Specular"].height), new Vector2(0.5f, 0.5f));
+        mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Glossiness"],
+                           new Rect(0, 0, generatedMaps["Glossiness"].width, generatedMaps["Glossiness"].height), new Vector2(0.5f, 0.5f));
+
+        pog.UpdateMaterialTextures(specularMap: generatedMaps["Specular"], glossinessMap: generatedMaps["Glossiness"]);
+    }
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
 }

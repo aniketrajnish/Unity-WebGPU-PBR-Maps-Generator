@@ -16,7 +16,7 @@ public static class NormalMap
                 float up = GetPixelHeight(heightMap, x, y - 1);
                 float down = GetPixelHeight(heightMap, x, y + 1);
 
-                Vector3 normal = new Vector3(left - right, up - down, 2f).normalized;
+                Vector3 normal = new Vector3(left - right, up - down, 2f).normalized * 5f;
                 normal = (normal + Vector3.one) * .5f;
 
                 normalMap.SetPixel(x, y, new Color(normal.x, normal.y, normal.z, 1f));
