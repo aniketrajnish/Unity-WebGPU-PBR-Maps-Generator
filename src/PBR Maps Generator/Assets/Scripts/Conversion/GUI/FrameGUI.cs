@@ -131,22 +131,31 @@ public class FrameGUI : MonoBehaviour
     public void OnMRToggleClicked()
     {
         AssignLabels(currentInput = InputMaps.BASE);
-        mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Metallic"],
-                new Rect(0, 0, generatedMaps["Metallic"].width, generatedMaps["Metallic"].height), new Vector2(0.5f, 0.5f));
-        mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Roughness"],
-                new Rect(0, 0, generatedMaps["Roughness"].width, generatedMaps["Roughness"].height), new Vector2(0.5f, 0.5f));
 
-        pog.UpdateMaterialTextures(metallicMap: generatedMaps["Metallic"], roughnessMap: generatedMaps["Roughness"]);
+        if (generatedMaps.ContainsKey("Metallic") && generatedMaps.ContainsKey("Roughness"))
+        {
+            mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Metallic"],
+                new Rect(0, 0, generatedMaps["Metallic"].width, generatedMaps["Metallic"].height), new Vector2(0.5f, 0.5f));
+            mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Roughness"],
+                    new Rect(0, 0, generatedMaps["Roughness"].width, generatedMaps["Roughness"].height), new Vector2(0.5f, 0.5f));
+
+            pog.UpdateMaterialTextures(metallicMap: generatedMaps["Metallic"], roughnessMap: generatedMaps["Roughness"]);
+        }
     }
     public void OnSGToggleClicked()
     {
         AssignLabels(currentInput = InputMaps.DIFFUSE);
-        mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Specular"],
-                           new Rect(0, 0, generatedMaps["Specular"].width, generatedMaps["Specular"].height), new Vector2(0.5f, 0.5f));
-        mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Glossiness"],
-                           new Rect(0, 0, generatedMaps["Glossiness"].width, generatedMaps["Glossiness"].height), new Vector2(0.5f, 0.5f));
 
-        pog.UpdateMaterialTextures(specularMap: generatedMaps["Specular"], glossinessMap: generatedMaps["Glossiness"]);
+        if (generatedMaps.ContainsKey("Specular") && generatedMaps.ContainsKey("Glossiness"))
+        {
+            mapFrames[4].mapImage.sprite = Sprite.Create(generatedMaps["Specular"],
+                           new Rect(0, 0, generatedMaps["Specular"].width, generatedMaps["Specular"].height), new Vector2(0.5f, 0.5f));
+            mapFrames[5].mapImage.sprite = Sprite.Create(generatedMaps["Glossiness"],
+                               new Rect(0, 0, generatedMaps["Glossiness"].width, generatedMaps["Glossiness"].height), new Vector2(0.5f, 0.5f));
+
+            pog.UpdateMaterialTextures(specularMap: generatedMaps["Specular"], glossinessMap: generatedMaps["Glossiness"]);
+        }
+
     }
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
 }
