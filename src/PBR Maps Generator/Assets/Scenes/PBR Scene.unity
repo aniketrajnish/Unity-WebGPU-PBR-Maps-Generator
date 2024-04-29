@@ -1089,6 +1089,7 @@ MonoBehaviour:
   - {fileID: 615171083}
   io: {fileID: 1958931920}
   pog: {fileID: 246294541}
+  ux: {fileID: 374953612}
   currentInput: 0
 --- !u!114 &374953612
 MonoBehaviour:
@@ -5621,7 +5622,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1975599470922448535, guid: 56ccc218ca3acfb4e8a6712a92b2d930, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1975599470922448535, guid: 56ccc218ca3acfb4e8a6712a92b2d930, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode

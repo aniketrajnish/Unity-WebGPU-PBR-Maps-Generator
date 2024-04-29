@@ -10,6 +10,7 @@ public class FrameGUI : MonoBehaviour
     [SerializeField] List<GameObject> mapFrameGOs;
     [SerializeField] UploadDownload io;
     [SerializeField] PlaceholderObjectGUI pog;
+    [SerializeField] UX ux;
     public List<MapFrame> mapFrames;
     Dictionary<string, InputMaps> inputMapLabels;
     Dictionary<string, CommonMaps> commonMapLabels;
@@ -118,6 +119,7 @@ public class FrameGUI : MonoBehaviour
 
                 break;
         }
+        ux.OnImageUploaded();
     }
     private Texture2D ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm) => conversionAlgorithm(inputTexture);
     private Texture2D ConvertTextureAndUpdateFrame(Texture2D inputTexture, Func<Texture2D, Texture2D> conversionAlgorithm, int frameIndex)
