@@ -10,7 +10,7 @@ using UnityEditor;
 
 public class UploadDownload : MonoBehaviour
 {
-    [SerializeField] private Image uploadImgHolder;
+    public Image uploadImgHolder;
     public string uploadImgFileName, uploadImgExtension;
     public event Action<Texture2D> OnImageLoaded;
 

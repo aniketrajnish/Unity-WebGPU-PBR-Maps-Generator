@@ -130,6 +130,13 @@ public class FrameGUI : MonoBehaviour
                     new Rect(0, 0, outputTexture.width, outputTexture.height), new Vector2(0.5f, 0.5f));
         return outputTexture;
     }
+    public void DownloadAllMaps()
+    {
+        UpdateTextures(io.uploadImgHolder.sprite.texture);
+
+        foreach (var map in generatedMaps)
+            io.OnDownloadBtnClick(map.Key + "_" + io.uploadImgFileName, io.uploadImgExtension, map.Value);
+    }
     public void OnMRToggleClicked()
     {
         AssignLabels(currentInput = InputMaps.BASE);
