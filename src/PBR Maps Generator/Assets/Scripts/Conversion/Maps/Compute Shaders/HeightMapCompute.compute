@@ -1,0 +1,12 @@
+#pragma kernel CSMain
+
+Texture2D<float4> BaseMap;
+RWTexture2D<float4> HeightMap;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float4 color = BaseMap[id.xy];
+    float height = color.r * 0.299 + color.g * 0.587 + color.b * 0.114; // greyscale conversion
+    HeightMap[id.xy] = float4(height, height, height, 1);
+}

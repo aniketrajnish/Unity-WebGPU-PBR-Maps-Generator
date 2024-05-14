@@ -1,0 +1,14 @@
+#pragma kernel CSMain
+
+Texture2D<float4> BaseMap;
+RWTexture2D<float4> NormalMap;
+
+[numthreads(8,8,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    uint2 dims = uint2(BaseMap.width, BaseMap.height);
+    float l = BaseMap[id.xy - uint2(1, 0)].r;
+    float r = BaseMap[id.xy + uint2(1, 0)].r;
+    float t = BaseMap[id.xy - uint2(0, 1)].r;
+    float b = BaseMap[id.xy + uint2(0, 1)].r;
+}
