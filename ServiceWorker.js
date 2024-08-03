@@ -1,9 +1,9 @@
 const cacheName = "makra-PBR Maps Generator-0.1";
 const contentToCache = [
-    "Build/gpu_rgb24_build.loader.js",
-    "Build/gpu_rgb24_build.framework.js",
-    "Build/gpu_rgb24_build.data",
-    "Build/gpu_rgb24_build.wasm",
+    "Build/gpu_unorm_build.loader.js",
+    "Build/gpu_unorm_build.framework.js",
+    "Build/gpu_unorm_build.data",
+    "Build/gpu_unorm_build.wasm",
     "TemplateData/style.css"
 
 ];
