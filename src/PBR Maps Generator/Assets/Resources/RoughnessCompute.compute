@@ -1,0 +1,37 @@
+#pragma kernel CSMain
+
+Texture2D<float4> BaseMap;
+RWTexture2D<float4> RoughnessMap;
+uint2 TextureSize;
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= TextureSize.x || id.y >= TextureSize.y)
+        return;
+
+    float center = dot(BaseMap[id.xy].rgb, float3(0.299, 0.587, 0.114));
+    float sum = 0;
+    int count = 0;
+
+    for (int offsetY = -1; offsetY <= 1; offsetY++)
+    {
+        for (int offsetX = -1; offsetX <= 1; offsetX++)
+        {
+            if (offsetX == 0 && offsetY == 0)
+                continue;
+
+            uint2 samplePos = uint2(
+                clamp(int(id.x) + offsetX, 0, int(TextureSize.x) - 1),
+                clamp(int(id.y) + offsetY, 0, int(TextureSize.y) - 1)
+            );
+
+            float sample = dot(BaseMap[samplePos].rgb, float3(0.299, 0.587, 0.114));
+            sum += abs(sample - center);
+            count++;
+        }
+    }
+
+    float roughness = saturate(sum / count);
+    RoughnessMap[id.xy] = float4(roughness, roughness, roughness, 1.0);
+}

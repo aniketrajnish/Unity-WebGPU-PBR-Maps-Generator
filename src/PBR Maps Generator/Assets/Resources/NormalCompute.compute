@@ -1,0 +1,27 @@
+#pragma kernel CSMain
+
+Texture2D<float> HeightMap;
+RWTexture2D<float4> NormalMap;
+uint2 TextureSize;
+
+float GetPixelHeight(int2 uv)
+{
+    return HeightMap[clamp(uv, int2(0, 0), TextureSize - 1)];
+}
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= TextureSize.x || id.y >= TextureSize.y)
+        return;
+
+    float left = GetPixelHeight(int2(id.x - 1, id.y));
+    float right = GetPixelHeight(int2(id.x + 1, id.y));
+    float up = GetPixelHeight(int2(id.x, id.y - 1));
+    float down = GetPixelHeight(int2(id.x, id.y + 1));
+
+    float3 normal = normalize(float3(left - right, up - down, 2.0)) * 5.0;
+    normal = (normal + 1.0) * 0.5;
+
+    NormalMap[id.xy] = float4(normal, 1.0);
+}

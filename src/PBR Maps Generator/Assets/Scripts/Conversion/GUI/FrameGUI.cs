@@ -80,19 +80,19 @@ public class FrameGUI : MonoBehaviour
     }
     public void UpdateTextures(Texture2D inputMap)
     {
-        generatedMaps["Height"] = ConvertTextureAndUpdateFrame(inputMap, HeightMap.ConvertToHeightMap, 1);
-        generatedMaps["Normal"] = ConvertTextureAndUpdateFrame(inputMap, NormalMap.ConvertToNormalMap, 2);
-        generatedMaps["AO"] = ConvertTextureAndUpdateFrame(inputMap, AOMap.ConvertToAOMap, 3);
+        generatedMaps["Height"] = ConvertTextureAndUpdateFrame(inputMap, HeightMap.GPUConvertToHeightMap, 1);
+        generatedMaps["Normal"] = ConvertTextureAndUpdateFrame(inputMap, NormalMap.GPUConvertToNormalMap, 2);
+        generatedMaps["AO"] = ConvertTextureAndUpdateFrame(inputMap, AOMap.GPUConvertToAOMap, 3);
 
         switch (currentInput)
         {
             case InputMaps.BASE:
 
-                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap, 4);
-                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap, 5);
+                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.GPUConvertToMetallicMap, 4);
+                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.GPUConvertToRoughnessMap, 5);
 
-                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap);
-                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap);
+                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.GPUConvertToSpecularMap);
+                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.GPUConvertToGlossinessMap);
 
                 pog.UpdateMaterialTextures(baseMap: inputMap, 
                     heightMap: generatedMaps["Height"], 
@@ -104,11 +104,11 @@ public class FrameGUI : MonoBehaviour
                 break;
 
             case InputMaps.DIFFUSE:
-                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.ConvertToSpecularMap, 4);
-                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.ConvertToGlossinessMap, 5);
+                generatedMaps["Specular"] = ConvertTextureAndUpdateFrame(inputMap, SpecularMap.GPUConvertToSpecularMap, 4);
+                generatedMaps["Glossiness"] = ConvertTextureAndUpdateFrame(inputMap, GlossinessMap.GPUConvertToGlossinessMap, 5);
 
-                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.ConvertToMetallicMap);
-                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.ConvertToRoughnessMap);
+                generatedMaps["Metallic"] = ConvertTextureAndUpdateFrame(inputMap, MetallicMap.GPUConvertToMetallicMap);
+                generatedMaps["Roughness"] = ConvertTextureAndUpdateFrame(inputMap, RoughnessMap.GPUConvertToRoughnessMap);
 
                 pog.UpdateMaterialTextures(diffuseMap: inputMap, 
                     heightMap: generatedMaps["Height"], 
