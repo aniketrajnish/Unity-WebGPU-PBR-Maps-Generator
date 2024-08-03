@@ -30,7 +30,7 @@ public static class NormalMap
 
     public static Texture2D GPUConvertToNormalMap(Texture2D baseMap)
     {
-        //if (_normalComp == null)
+        if (_normalComp == null)
             return CPUConvertToNormalMap(baseMap);
 
         Texture2D heightMap = HeightMap.GPUConvertToHeightMap(baseMap);

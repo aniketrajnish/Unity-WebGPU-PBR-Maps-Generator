@@ -30,7 +30,7 @@ public static class DiffuseMap
 
     public static Texture2D GPUConvertToDiffuseMap(Texture2D baseMap)
     {
-        //if (_diffuseComp == null)
+        if (_diffuseComp == null)
             return CPUConvertToDiffuseMap(baseMap);
 
         int w = baseMap.width;

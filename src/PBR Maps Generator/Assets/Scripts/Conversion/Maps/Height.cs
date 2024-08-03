@@ -21,7 +21,7 @@ public static class HeightMap
 
     public static Texture2D GPUConvertToHeightMap(Texture2D baseMap)
     {
-        //if (_heightComp == null)        
+        if (_heightComp == null)        
             return CPUConvertToHeightMap(baseMap);        
 
         int w = baseMap.width;

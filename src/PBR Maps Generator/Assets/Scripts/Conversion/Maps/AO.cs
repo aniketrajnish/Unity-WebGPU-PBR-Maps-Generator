@@ -21,7 +21,7 @@ public static class AOMap
 
     public static Texture2D GPUConvertToAOMap(Texture2D baseMap)
     {
-        //if (_aoComp == null)    
+        if (_aoComp == null)    
             return CPUConvertToAOMap(baseMap);
         
 

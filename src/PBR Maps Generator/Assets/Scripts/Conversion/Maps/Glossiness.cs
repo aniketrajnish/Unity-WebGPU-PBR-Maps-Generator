@@ -30,7 +30,7 @@ public static class GlossinessMap
 
     public static Texture2D GPUConvertToGlossinessMap(Texture2D baseMap)
     {
-        //if (_glossinessComp == null)
+        if (_glossinessComp == null)
             return CPUConvertToGlossinessMap(baseMap);
 
         Texture2D roughnessMap = RoughnessMap.GPUConvertToRoughnessMap(baseMap);
