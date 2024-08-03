@@ -52,7 +52,7 @@ public static class RoughnessMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _roughnessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D roughnessMap = new Texture2D(w, h, TextureFormat.RGB24, false);
+        Texture2D roughnessMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
         RenderTexture.active = roughnessRT;
         roughnessMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         roughnessMap.Apply();

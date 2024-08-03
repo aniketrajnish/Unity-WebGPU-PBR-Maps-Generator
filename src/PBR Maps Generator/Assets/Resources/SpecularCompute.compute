@@ -1,7 +1,7 @@
 #pragma kernel CSMain
 
 Texture2D<float4> BaseMap;
-RWTexture2D<float4> SpecularMap;
+RWTexture2D<unorm float4> SpecularMap;
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)

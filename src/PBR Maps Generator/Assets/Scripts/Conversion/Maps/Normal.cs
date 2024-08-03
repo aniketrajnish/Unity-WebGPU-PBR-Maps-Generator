@@ -54,7 +54,7 @@ public static class NormalMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _normalComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D normalMap = new Texture2D(w, h, TextureFormat.RGB24, false);
+        Texture2D normalMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
         RenderTexture.active = normalRT;
         normalMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         normalMap.Apply();

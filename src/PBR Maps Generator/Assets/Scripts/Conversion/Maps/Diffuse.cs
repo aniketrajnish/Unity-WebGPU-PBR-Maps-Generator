@@ -51,7 +51,7 @@ public static class DiffuseMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _diffuseComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D diffuseMap = new Texture2D(w, h, TextureFormat.RGB24, false);
+        Texture2D diffuseMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
         RenderTexture.active = diffuseRT;
         diffuseMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         diffuseMap.Apply();
