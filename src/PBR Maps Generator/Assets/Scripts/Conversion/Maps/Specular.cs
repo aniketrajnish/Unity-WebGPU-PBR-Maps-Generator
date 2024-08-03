@@ -21,7 +21,7 @@ public static class SpecularMap
 
     public static Texture2D GPUConvertToSpecularMap(Texture2D baseMap)
     {
-        if (_specularComp == null)
+        //if (_specularComp == null)
             return CPUConvertToSpecularMap(baseMap);
 
         int w = baseMap.width;

@@ -30,7 +30,7 @@ public static class RoughnessMap
 
     public static Texture2D GPUConvertToRoughnessMap(Texture2D baseMap)
     {
-        if (_roughnessComp == null)
+        //if (_roughnessComp == null)
             return CPUConvertToRoughnessMap(baseMap);
 
         int w = baseMap.width;

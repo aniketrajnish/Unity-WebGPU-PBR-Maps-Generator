@@ -30,7 +30,7 @@ public static class MetallicMap
 
     public static Texture2D GPUConvertToMetallicMap(Texture2D baseMap)
     {
-        if (_metallicComp == null)
+        //if (_metallicComp == null)
             return CPUConvertToMetallicMap(baseMap);
 
         int w = baseMap.width;
