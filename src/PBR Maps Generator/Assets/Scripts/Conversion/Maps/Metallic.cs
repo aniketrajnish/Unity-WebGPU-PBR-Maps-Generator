@@ -51,7 +51,7 @@ public static class MetallicMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _metallicComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D metallicMap = new Texture2D(w, h, TextureFormat.ARGB32, false);
+        Texture2D metallicMap = new Texture2D(w, h, TextureFormat.RGB24, false);
         RenderTexture.active = metallicRT;
         metallicMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         metallicMap.Apply();

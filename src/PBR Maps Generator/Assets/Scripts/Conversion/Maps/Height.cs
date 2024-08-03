@@ -42,7 +42,7 @@ public static class HeightMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _heightComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D heightMap = new Texture2D(w, h, TextureFormat.ARGB32, false);
+        Texture2D heightMap = new Texture2D(w, h, TextureFormat.RGB24, false);
         RenderTexture.active = heightRT;
         heightMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         heightMap.Apply();

@@ -53,7 +53,7 @@ public static class GlossinessMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _glossinessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D glossinessMap = new Texture2D(w, h, TextureFormat.ARGB32, false);
+        Texture2D glossinessMap = new Texture2D(w, h, TextureFormat.RGB24, false);
         RenderTexture.active = glossinessRT;
         glossinessMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         glossinessMap.Apply();

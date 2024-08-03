@@ -43,7 +43,7 @@ public static class AOMap
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _aoComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D aoMap = new Texture2D(w, h, TextureFormat.ARGB32, false);
+        Texture2D aoMap = new Texture2D(w, h, TextureFormat.RGB24, false);
         RenderTexture.active = aoRT;
         aoMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
         aoMap.Apply();
