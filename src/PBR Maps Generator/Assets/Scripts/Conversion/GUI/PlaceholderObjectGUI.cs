@@ -127,12 +127,12 @@ public class PlaceholderObjectGUI : MonoBehaviour
         if (heightMap != null)
         {
             objectMaterial.SetTexture("_ParallaxMap", heightMap);
-            objectMaterial.SetFloat("_Parallax", 0.08f);
+            objectMaterial.SetFloat("_Parallax", .05f);
         }
         if (normalMap != null)
         {
             objectMaterial.SetTexture("_BumpMap", normalMap);
-            objectMaterial.SetFloat("_BumpScale", 1.0f);
+            objectMaterial.SetFloat("_BumpScale", .8f);
         }
         if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);
 
