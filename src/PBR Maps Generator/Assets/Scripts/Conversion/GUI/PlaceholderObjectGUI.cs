@@ -112,7 +112,15 @@ public class PlaceholderObjectGUI : MonoBehaviour
     }
     public void EnableDisableInstructionsPanel() => instructionsPanel.SetActive(!instructionsPanel.activeSelf);
 #nullable enable
-    public void UpdateMaterialTextures(Texture2D? baseMap = null, Texture2D? diffuseMap = null, Texture2D? heightMap = null, Texture2D? normalMap = null, Texture2D? aoMap = null, Texture2D? metallicMap = null, Texture2D? roughnessMap = null, Texture2D? specularMap = null, Texture2D? glossinessMap = null)
+    public void UpdateMaterialTextures(Texture2D? baseMap = null, 
+                                       Texture2D? diffuseMap = null, 
+                                       Texture2D? heightMap = null, 
+                                       Texture2D? normalMap = null, 
+                                       Texture2D? aoMap = null, 
+                                       Texture2D? metallicMap = null, 
+                                       Texture2D? roughnessMap = null, 
+                                       Texture2D? specularMap = null, 
+                                       Texture2D? glossinessMap = null)
     {
         if (baseMap != null) objectMaterial.SetTexture("_MainTex", baseMap);
         if (diffuseMap != null) objectMaterial.SetTexture("_MainTex", diffuseMap);
@@ -133,14 +141,14 @@ public class PlaceholderObjectGUI : MonoBehaviour
             objectMaterial.shader = Shader.Find("Standard (Specular setup)");
             objectMaterial.SetTexture("_SpecGlossMap", specularMap);
             objectMaterial.SetColor("_SpecColor", specularMap.GetPixel(0, 0));
-            objectMaterial.SetFloat("_Glossiness", glossinessMap.GetPixel(0, 0).r);
+            objectMaterial.SetFloat("_Glossiness", .2f);
 
         }
         else if (metallicMap != null && roughnessMap != null)
         {
             objectMaterial.shader = Shader.Find("Standard");
             objectMaterial.SetTexture("_MetallicGlossMap", metallicMap);
-            objectMaterial.SetFloat("_Metallic", 1.0f);
+            objectMaterial.SetFloat("_Metallic", .2f);
             objectMaterial.SetFloat("_Glossiness", roughnessMap.GetPixel(0, 0).r);
         }
 
