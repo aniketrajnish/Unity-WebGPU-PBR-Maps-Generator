@@ -27,8 +27,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
                 continue;
 
             uint2 samplePos = uint2(
-                clamp(int(id.x) + offsetX, 0, int(TextureSize.x) - 1),
-                clamp(int(id.y) + offsetY, 0, int(TextureSize.y) - 1)
+                clamp(int(uv.x) + offsetX, 0, int(TextureSize.x) - 1),
+                clamp(int(uv.y) + offsetY, 0, int(TextureSize.y) - 1)
             );
 
             float sample = dot(BaseMap[samplePos].rgb, float3(0.299, 0.587, 0.114));
