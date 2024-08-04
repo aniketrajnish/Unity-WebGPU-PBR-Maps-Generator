@@ -126,23 +126,19 @@ public class PlaceholderObjectGUI : MonoBehaviour
             objectMaterial.SetTexture("_BumpMap", normalMap);
             objectMaterial.SetFloat("_BumpScale", 1.0f);
         }
-        if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);
+        if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);        
 
-        /*if (specularMap != null && glossinessMap != null)
+        if (specularMap != null && glossinessMap != null)
         {
             objectMaterial.shader = Shader.Find("Standard (Specular setup)");
             objectMaterial.SetTexture("_SpecGlossMap", specularMap);
-            objectMaterial.SetColor("_SpecColor", specularMap.GetPixel(0, 0));
-            objectMaterial.SetFloat("_Glossiness", glossinessMap.GetPixel(0, 0).r); 
-                                                                                   
+
         }
         else if (metallicMap != null && roughnessMap != null)
         {
             objectMaterial.shader = Shader.Find("Standard");
             objectMaterial.SetTexture("_MetallicGlossMap", metallicMap);
-            objectMaterial.SetFloat("_Metallic", 1.0f);
-            objectMaterial.SetFloat("_Glossiness", roughnessMap.GetPixel(0, 0).r); 
-        }*/
+        }
         objectMaterial.shader = objectMaterial.shader;
     }
 #nullable disable
