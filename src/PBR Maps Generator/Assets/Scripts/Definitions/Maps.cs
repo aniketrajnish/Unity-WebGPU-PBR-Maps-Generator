@@ -7,7 +7,7 @@ public enum CommonMaps
 {  
     HEIGHT,
     NORMAL,
-    AMBIENT_OCCLUSION
+    AO
 }
 public enum MRMaps
 {    

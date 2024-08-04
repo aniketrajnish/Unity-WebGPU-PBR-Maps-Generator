@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
 public static class RoughnessMap
 {
@@ -14,7 +16,6 @@ public static class RoughnessMap
             {
                 throw new System.NullReferenceException("Failed to load Roughness compute shader. Make sure 'RoughnessCompute.compute' is in a Resources folder.");
             }
-
             _kernelIdx = _roughnessComp.FindKernel("CSMain");
             if (_kernelIdx < 0)
             {
@@ -28,45 +29,55 @@ public static class RoughnessMap
         }
     }
 
-    public static Texture2D GPUConvertToRoughnessMap(Texture2D baseMap)
+    public static void GPUConvertToRoughnessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_roughnessComp == null)
-            return CPUConvertToRoughnessMap(baseMap);
+        {
+            callback(CPUConvertToRoughnessMap(baseMap));
+            return;
+        }
 
         int w = baseMap.width;
         int h = baseMap.height;
-
         RenderTexture baseRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         baseRT.enableRandomWrite = true;
         Graphics.Blit(baseMap, baseRT);
-
         RenderTexture roughnessRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         roughnessRT.enableRandomWrite = true;
         roughnessRT.Create();
-
         _roughnessComp.SetTexture(_kernelIdx, "BaseMap", baseRT);
         _roughnessComp.SetTexture(_kernelIdx, "RoughnessMap", roughnessRT);
         _roughnessComp.SetInts("TextureSize", w, h);
-
+        _roughnessComp.SetBool("FlipY", Application.platform == RuntimePlatform.WebGLPlayer);
         int thrdX = Mathf.CeilToInt(w / 8.0f);
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _roughnessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D roughnessMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        RenderTexture.active = roughnessRT;
-        roughnessMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        roughnessMap.Apply();
+        AsyncGPUReadback.Request(roughnessRT, 0, TextureFormat.RGBA32, (request) =>
+        {
+            if (request.hasError)
+            {
+                Debug.LogError("GPU readback error detected.");
+                callback(null);
+                baseRT.Release();
+                roughnessRT.Release();
+                return;
+            }
 
-        RenderTexture.active = null;
-        baseRT.Release();
-        roughnessRT.Release();
+            Texture2D roughnessMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            roughnessMap.LoadRawTextureData(request.GetData<byte>());
+            roughnessMap.Apply();
 
-        return roughnessMap;
+            baseRT.Release();
+            roughnessRT.Release();
+
+            callback(roughnessMap);
+        });
     }
 
-    private static Texture2D CPUConvertToRoughnessMap(Texture2D baseMap)
+    public static Texture2D CPUConvertToRoughnessMap(Texture2D baseMap)
     {
-        Texture2D roughnessMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGB24, true);
+        Texture2D roughnessMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < baseMap.height; y++)
         {
             for (int x = 0; x < baseMap.width; x++)

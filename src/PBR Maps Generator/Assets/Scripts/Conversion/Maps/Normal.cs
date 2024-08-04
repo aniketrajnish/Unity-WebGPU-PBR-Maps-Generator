@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
 public static class NormalMap
 {
@@ -14,7 +16,6 @@ public static class NormalMap
             {
                 throw new System.NullReferenceException("Failed to load Normal compute shader. Make sure 'NormalCompute.compute' is in a Resources folder.");
             }
-
             _kernelIdx = _normalComp.FindKernel("CSMain");
             if (_kernelIdx < 0)
             {
@@ -28,48 +29,66 @@ public static class NormalMap
         }
     }
 
-    public static Texture2D GPUConvertToNormalMap(Texture2D baseMap)
+    public static void GPUConvertToNormalMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_normalComp == null)
-            return CPUConvertToNormalMap(baseMap);
+        {
+            callback(CPUConvertToNormalMap(baseMap));
+            return;
+        }
 
-        Texture2D heightMap = HeightMap.GPUConvertToHeightMap(baseMap);
+        HeightMap.GPUConvertToHeightMap(baseMap, (heightMap) =>
+        {
+            if (heightMap == null)
+            {
+                Debug.LogError("Failed to generate height map for normal map generation.");
+                callback(null);
+                return;
+            }
 
-        int w = baseMap.width;
-        int h = baseMap.height;
+            int w = baseMap.width;
+            int h = baseMap.height;
+            RenderTexture heightRT = new RenderTexture(w, h, 0, RenderTextureFormat.RFloat);
+            heightRT.enableRandomWrite = true;
+            Graphics.Blit(heightMap, heightRT);
+            RenderTexture normalRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
+            normalRT.enableRandomWrite = true;
+            normalRT.Create();
+            _normalComp.SetTexture(_kernelIdx, "HeightMap", heightRT);
+            _normalComp.SetTexture(_kernelIdx, "NormalMap", normalRT);
+            _normalComp.SetInts("TextureSize", w, h);
+            _normalComp.SetBool("FlipY", Application.platform == RuntimePlatform.WebGLPlayer);
+            int thrdX = Mathf.CeilToInt(w / 8.0f);
+            int thrdY = Mathf.CeilToInt(h / 8.0f);
+            _normalComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        RenderTexture heightRT = new RenderTexture(w, h, 0, RenderTextureFormat.RFloat);
-        heightRT.enableRandomWrite = true;
-        Graphics.Blit(heightMap, heightRT);
+            AsyncGPUReadback.Request(normalRT, 0, TextureFormat.RGBA32, (request) =>
+            {
+                if (request.hasError)
+                {
+                    Debug.LogError("GPU readback error detected.");
+                    callback(null);
+                    heightRT.Release();
+                    normalRT.Release();
+                    return;
+                }
 
-        RenderTexture normalRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
-        normalRT.enableRandomWrite = true;
-        normalRT.Create();
+                Texture2D normalMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
+                normalMap.LoadRawTextureData(request.GetData<byte>());
+                normalMap.Apply();
 
-        _normalComp.SetTexture(_kernelIdx, "HeightMap", heightRT);
-        _normalComp.SetTexture(_kernelIdx, "NormalMap", normalRT);
-        _normalComp.SetInts("TextureSize", w, h);
+                heightRT.Release();
+                normalRT.Release();
 
-        int thrdX = Mathf.CeilToInt(w / 8.0f);
-        int thrdY = Mathf.CeilToInt(h / 8.0f);
-        _normalComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
-
-        Texture2D normalMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        RenderTexture.active = normalRT;
-        normalMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        normalMap.Apply();
-
-        RenderTexture.active = null;
-        heightRT.Release();
-        normalRT.Release();
-
-        return normalMap;
+                callback(normalMap);
+            });
+        });
     }
 
     private static Texture2D CPUConvertToNormalMap(Texture2D baseMap)
     {
-        Texture2D heightMap = HeightMap.GPUConvertToHeightMap(baseMap);
-        Texture2D normalMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGB24, true);
+        Texture2D heightMap = HeightMap.CPUConvertToHeightMap(baseMap);
+        Texture2D normalMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < heightMap.height; y++)
         {
             for (int x = 0; x < heightMap.width; x++)

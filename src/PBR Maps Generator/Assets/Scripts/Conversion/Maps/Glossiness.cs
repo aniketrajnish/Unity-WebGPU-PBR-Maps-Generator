@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
 public static class GlossinessMap
 {
@@ -14,7 +16,6 @@ public static class GlossinessMap
             {
                 throw new System.NullReferenceException("Failed to load Glossiness compute shader. Make sure 'GlossinessCompute.compute' is in a Resources folder.");
             }
-
             _kernelIdx = _glossinessComp.FindKernel("CSMain");
             if (_kernelIdx < 0)
             {
@@ -28,47 +29,64 @@ public static class GlossinessMap
         }
     }
 
-    public static Texture2D GPUConvertToGlossinessMap(Texture2D baseMap)
+    public static void GPUConvertToGlossinessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_glossinessComp == null)
-            return CPUConvertToGlossinessMap(baseMap);
+        {
+            callback(CPUConvertToGlossinessMap(baseMap));
+            return;
+        }
 
-        Texture2D roughnessMap = RoughnessMap.GPUConvertToRoughnessMap(baseMap);
+        RoughnessMap.GPUConvertToRoughnessMap(baseMap, (roughnessMap) =>
+        {
+            if (roughnessMap == null)
+            {
+                Debug.LogError("Failed to generate roughness map");
+                callback(null);
+                return;
+            }
 
-        int w = baseMap.width;
-        int h = baseMap.height;
+            int w = baseMap.width;
+            int h = baseMap.height;
+            RenderTexture roughnessRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
+            roughnessRT.enableRandomWrite = true;
+            Graphics.Blit(roughnessMap, roughnessRT);
+            RenderTexture glossinessRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
+            glossinessRT.enableRandomWrite = true;
+            glossinessRT.Create();
+            _glossinessComp.SetTexture(_kernelIdx, "RoughnessMap", roughnessRT);
+            _glossinessComp.SetTexture(_kernelIdx, "GlossinessMap", glossinessRT);
+            int thrdX = Mathf.CeilToInt(w / 8.0f);
+            int thrdY = Mathf.CeilToInt(h / 8.0f);
+            _glossinessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        RenderTexture roughnessRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
-        roughnessRT.enableRandomWrite = true;
-        Graphics.Blit(roughnessMap, roughnessRT);
+            AsyncGPUReadback.Request(glossinessRT, 0, TextureFormat.RGBA32, (request) =>
+            {
+                if (request.hasError)
+                {
+                    Debug.LogError("GPU readback error detected.");
+                    callback(null);
+                    roughnessRT.Release();
+                    glossinessRT.Release();
+                    return;
+                }
 
-        RenderTexture glossinessRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
-        glossinessRT.enableRandomWrite = true;
-        glossinessRT.Create();
+                Texture2D glossinessMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
+                glossinessMap.LoadRawTextureData(request.GetData<byte>());
+                glossinessMap.Apply();
 
-        _glossinessComp.SetTexture(_kernelIdx, "RoughnessMap", roughnessRT);
-        _glossinessComp.SetTexture(_kernelIdx, "GlossinessMap", glossinessRT);
+                roughnessRT.Release();
+                glossinessRT.Release();
 
-        int thrdX = Mathf.CeilToInt(w / 8.0f);
-        int thrdY = Mathf.CeilToInt(h / 8.0f);
-        _glossinessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
-
-        Texture2D glossinessMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        RenderTexture.active = glossinessRT;
-        glossinessMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        glossinessMap.Apply();
-
-        RenderTexture.active = null;
-        roughnessRT.Release();
-        glossinessRT.Release();
-
-        return glossinessMap;
+                callback(glossinessMap);
+            });
+        });
     }
 
     private static Texture2D CPUConvertToGlossinessMap(Texture2D baseMap)
     {
-        Texture2D roughnessMap = RoughnessMap.GPUConvertToRoughnessMap(baseMap);
-        Texture2D glossinessMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGB24, true);
+        Texture2D roughnessMap = RoughnessMap.CPUConvertToRoughnessMap(baseMap);
+        Texture2D glossinessMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < baseMap.height; y++)
         {
             for (int x = 0; x < baseMap.width; x++)

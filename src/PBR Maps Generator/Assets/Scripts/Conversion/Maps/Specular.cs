@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
 public static class SpecularMap
 {
@@ -13,50 +15,60 @@ public static class SpecularMap
             Debug.LogError("Failed to load Specular compute shader. Make sure 'SpecularCompute.compute' is in a Resources folder.");
             return;
         }
-
         _kernelIdx = _specularComp.FindKernel("CSMain");
         if (_kernelIdx < 0)
             Debug.LogError("Failed to find 'CSMain' kernel in Specular compute shader.");
     }
 
-    public static Texture2D GPUConvertToSpecularMap(Texture2D baseMap)
+    public static void GPUConvertToSpecularMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_specularComp == null)
-            return CPUConvertToSpecularMap(baseMap);
+        {
+            callback(CPUConvertToSpecularMap(baseMap));
+            return;
+        }
 
         int w = baseMap.width;
         int h = baseMap.height;
-
         RenderTexture baseRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         baseRT.enableRandomWrite = true;
         Graphics.Blit(baseMap, baseRT);
-
         RenderTexture specularRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         specularRT.enableRandomWrite = true;
         specularRT.Create();
-
         _specularComp.SetTexture(_kernelIdx, "BaseMap", baseRT);
         _specularComp.SetTexture(_kernelIdx, "SpecularMap", specularRT);
-
+        _specularComp.SetInts("TextureSize", w, h);
+        _specularComp.SetBool("FlipY", Application.platform == RuntimePlatform.WebGLPlayer);
         int thrdX = Mathf.CeilToInt(w / 8.0f);
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _specularComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D specularMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        RenderTexture.active = specularRT;
-        specularMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        specularMap.Apply();
+        AsyncGPUReadback.Request(specularRT, 0, TextureFormat.RGBA32, (request) =>
+        {
+            if (request.hasError)
+            {
+                Debug.LogError("GPU readback error detected.");
+                callback(null);
+                baseRT.Release();
+                specularRT.Release();
+                return;
+            }
 
-        RenderTexture.active = null;
-        baseRT.Release();
-        specularRT.Release();
+            Texture2D specularMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            specularMap.LoadRawTextureData(request.GetData<byte>());
+            specularMap.Apply();
 
-        return specularMap;
+            baseRT.Release();
+            specularRT.Release();
+
+            callback(specularMap);
+        });
     }
 
     private static Texture2D CPUConvertToSpecularMap(Texture2D baseMap)
     {
-        Texture2D specularMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGB24, true);
+        Texture2D specularMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < baseMap.height; y++)
         {
             for (int x = 0; x < baseMap.width; x++)

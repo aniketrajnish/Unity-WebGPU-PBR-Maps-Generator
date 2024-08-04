@@ -2,11 +2,16 @@
 
 Texture2D<float4> BaseMap;
 RWTexture2D<unorm float4> HeightMap;
+uint2 TextureSize;
+bool FlipY;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    float4 color = BaseMap[id.xy];
+    uint2 uv = id.xy;
+    if (FlipY)
+        uv.y = TextureSize.y - 1 - uv.y;
+    float4 color = BaseMap[uv];
     float height = color.r * 0.299 + color.g * 0.587 + color.b * 0.114; // greyscale conversion
     HeightMap[id.xy] = float4(height, height, height, 1);
 }

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
 public static class MetallicMap
 {
@@ -14,7 +16,6 @@ public static class MetallicMap
             {
                 throw new System.NullReferenceException("Failed to load Metallic compute shader. Make sure 'MetallicCompute.compute' is in a Resources folder.");
             }
-
             _kernelIdx = _metallicComp.FindKernel("CSMain");
             if (_kernelIdx < 0)
             {
@@ -28,39 +29,50 @@ public static class MetallicMap
         }
     }
 
-    public static Texture2D GPUConvertToMetallicMap(Texture2D baseMap)
+    public static void GPUConvertToMetallicMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_metallicComp == null)
-            return CPUConvertToMetallicMap(baseMap);
+        {
+            callback(CPUConvertToMetallicMap(baseMap));
+            return;
+        }
 
         int w = baseMap.width;
         int h = baseMap.height;
-
         RenderTexture baseRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         baseRT.enableRandomWrite = true;
         Graphics.Blit(baseMap, baseRT);
-
         RenderTexture metallicRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
         metallicRT.enableRandomWrite = true;
         metallicRT.Create();
-
         _metallicComp.SetTexture(_kernelIdx, "BaseMap", baseRT);
         _metallicComp.SetTexture(_kernelIdx, "MetallicMap", metallicRT);
-
+        _metallicComp.SetInts("TextureSize", w, h);
+        _metallicComp.SetBool("FlipY", Application.platform == RuntimePlatform.WebGLPlayer);
         int thrdX = Mathf.CeilToInt(w / 8.0f);
         int thrdY = Mathf.CeilToInt(h / 8.0f);
         _metallicComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
 
-        Texture2D metallicMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        RenderTexture.active = metallicRT;
-        metallicMap.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        metallicMap.Apply();
+        AsyncGPUReadback.Request(metallicRT, 0, TextureFormat.RGBA32, (request) =>
+        {
+            if (request.hasError)
+            {
+                Debug.LogError("GPU readback error detected.");
+                callback(null);
+                baseRT.Release();
+                metallicRT.Release();
+                return;
+            }
 
-        RenderTexture.active = null;
-        baseRT.Release();
-        metallicRT.Release();
+            Texture2D metallicMap = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            metallicMap.LoadRawTextureData(request.GetData<byte>());
+            metallicMap.Apply();
 
-        return metallicMap;
+            baseRT.Release();
+            metallicRT.Release();
+
+            callback(metallicMap);
+        });
     }
 
     private static Texture2D CPUConvertToMetallicMap(Texture2D baseMap)

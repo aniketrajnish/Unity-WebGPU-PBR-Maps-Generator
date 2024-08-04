@@ -65,7 +65,7 @@ public static class DiffuseMap
 
     private static Texture2D CPUConvertToDiffuseMap(Texture2D baseMap)
     {
-        Texture2D diffuseMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGB24, true);
+        Texture2D diffuseMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < baseMap.height; y++)
         {
             for (int x = 0; x < baseMap.width; x++)

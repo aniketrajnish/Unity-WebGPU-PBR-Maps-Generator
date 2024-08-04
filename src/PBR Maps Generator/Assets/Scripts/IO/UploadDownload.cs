@@ -34,6 +34,7 @@ public class UploadDownload : MonoBehaviour
     }
     public void OnDownloadBtnClick(string fileName, string extension, Texture2D downloadTex)
     {
+        print(Application.platform);
         if (Application.platform == RuntimePlatform.WebGLPlayer)
             DownloadImage(downloadTex, fileName, extension);
 #if UNITY_EDITOR

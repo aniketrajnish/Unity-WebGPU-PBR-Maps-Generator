@@ -3,14 +3,19 @@
 Texture2D<float4> BaseMap;
 RWTexture2D<unorm float4> RoughnessMap;
 uint2 TextureSize;
+bool FlipY;
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= TextureSize.x || id.y >= TextureSize.y)
         return;
+    
+    uint2 uv = id.xy;
+    if (FlipY)
+        uv.y = TextureSize.y - 1 - uv.y;
 
-    float center = dot(BaseMap[id.xy].rgb, float3(0.299, 0.587, 0.114));
+    float center = dot(BaseMap[uv].rgb, float3(0.299, 0.587, 0.114));
     float sum = 0;
     int count = 0;
 
