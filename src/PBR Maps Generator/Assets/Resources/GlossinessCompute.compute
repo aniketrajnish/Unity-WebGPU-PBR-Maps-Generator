@@ -2,11 +2,17 @@
 
 Texture2D<float4> RoughnessMap;
 RWTexture2D<unorm float4> GlossinessMap;
+uint2 TextureSize;
+bool FlipY;
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-    float4 roughness = RoughnessMap[id.xy];
+    uint2 uv = id.xy;
+    if (FlipY)
+        uv.y = TextureSize.y - 1 - uv.y;
+    
+    float4 roughness = RoughnessMap[uv];
     float glossiness = 1.0 - roughness.r; // Assuming roughness is stored in the red channel
     GlossinessMap[id.xy] = float4(glossiness, glossiness, glossiness, 1.0);
 }

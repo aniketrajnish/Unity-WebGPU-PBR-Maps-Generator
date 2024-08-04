@@ -10,6 +10,13 @@ public static class HeightMap
 
     static HeightMap()
     {
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {( _useGPU ? "available" : "not available" )}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+    public static void InitializeComputeShader()
+    {
         _heightComp = Resources.Load<ComputeShader>("HeightCompute");
         if (_heightComp == null)
         {

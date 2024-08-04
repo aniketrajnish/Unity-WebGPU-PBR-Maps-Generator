@@ -9,24 +9,22 @@ public static class NormalMap
 
     static NormalMap()
     {
-        try
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+    public static void InitializeComputeShader()
+    {
+        _normalComp = Resources.Load<ComputeShader>("NormalCompute");
+        if (_normalComp == null)
         {
-            _normalComp = Resources.Load<ComputeShader>("NormalCompute");
-            if (_normalComp == null)
-            {
-                throw new System.NullReferenceException("Failed to load Normal compute shader. Make sure 'NormalCompute.compute' is in a Resources folder.");
-            }
-            _kernelIdx = _normalComp.FindKernel("CSMain");
-            if (_kernelIdx < 0)
-            {
-                throw new System.InvalidOperationException("Failed to find 'CSMain' kernel in Normal compute shader.");
-            }
+            Debug.LogError("Failed to load Normal compute shader. Make sure 'NormalCompute.compute' is in a Resources folder.");
+            return;
         }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error in NormalMap initialization: {e.Message}");
-            _normalComp = null;
-        }
+        _kernelIdx = _normalComp.FindKernel("CSMain");
+        if (_kernelIdx < 0)
+            Debug.LogError("Failed to find 'CSMain' kernel in Normal compute shader.");
     }
 
     public static void GPUConvertToNormalMap(Texture2D baseMap, Action<Texture2D> callback)

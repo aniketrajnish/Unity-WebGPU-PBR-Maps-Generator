@@ -9,6 +9,13 @@ public static class SpecularMap
 
     static SpecularMap()
     {
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+    public static void InitializeComputeShader()
+    {
         _specularComp = Resources.Load<ComputeShader>("SpecularCompute");
         if (_specularComp == null)
         {

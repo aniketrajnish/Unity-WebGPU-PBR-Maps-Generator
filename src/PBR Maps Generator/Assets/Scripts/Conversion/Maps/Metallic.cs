@@ -9,24 +9,22 @@ public static class MetallicMap
 
     static MetallicMap()
     {
-        try
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+    public static void InitializeComputeShader()
+    {
+        _metallicComp = Resources.Load<ComputeShader>("MetallicCompute");
+        if (_metallicComp == null)
         {
-            _metallicComp = Resources.Load<ComputeShader>("MetallicCompute");
-            if (_metallicComp == null)
-            {
-                throw new System.NullReferenceException("Failed to load Metallic compute shader. Make sure 'MetallicCompute.compute' is in a Resources folder.");
-            }
-            _kernelIdx = _metallicComp.FindKernel("CSMain");
-            if (_kernelIdx < 0)
-            {
-                throw new System.InvalidOperationException("Failed to find 'CSMain' kernel in Metallic compute shader.");
-            }
+            Debug.LogError("Failed to load Metallic compute shader. Make sure 'MetallicCompute.compute' is in a Resources folder.");
+            return;
         }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error in MetallicMap initialization: {e.Message}");
-            _metallicComp = null;
-        }
+        _kernelIdx = _metallicComp.FindKernel("CSMain");
+        if (_kernelIdx < 0)
+            Debug.LogError("Failed to find 'CSMain' kernel in Metallic compute shader.");
     }
 
     public static void GPUConvertToMetallicMap(Texture2D baseMap, Action<Texture2D> callback)

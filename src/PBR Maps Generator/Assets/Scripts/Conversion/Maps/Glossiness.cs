@@ -9,26 +9,23 @@ public static class GlossinessMap
 
     static GlossinessMap()
     {
-        try
-        {
-            _glossinessComp = Resources.Load<ComputeShader>("GlossinessCompute");
-            if (_glossinessComp == null)
-            {
-                throw new System.NullReferenceException("Failed to load Glossiness compute shader. Make sure 'GlossinessCompute.compute' is in a Resources folder.");
-            }
-            _kernelIdx = _glossinessComp.FindKernel("CSMain");
-            if (_kernelIdx < 0)
-            {
-                throw new System.InvalidOperationException("Failed to find 'CSMain' kernel in Glossiness compute shader.");
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error in GlossinessMap initialization: {e.Message}");
-            _glossinessComp = null;
-        }
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
     }
-
+    public static void InitializeComputeShader()
+    {
+        _glossinessComp = Resources.Load<ComputeShader>("GlossinessCompute");
+        if (_glossinessComp == null)
+        {
+            Debug.LogError("Failed to load Glossiness compute shader. Make sure 'GlossinessCompute.compute' is in a Resources folder.");
+            return;
+        }
+        _kernelIdx = _glossinessComp.FindKernel("CSMain");
+        if (_kernelIdx < 0)
+            Debug.LogError("Failed to find 'CSMain' kernel in Glossiness compute shader.");
+    }
     public static void GPUConvertToGlossinessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         if (_glossinessComp == null)

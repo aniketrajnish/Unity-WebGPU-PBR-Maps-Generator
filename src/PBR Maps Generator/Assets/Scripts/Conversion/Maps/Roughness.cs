@@ -9,24 +9,22 @@ public static class RoughnessMap
 
     static RoughnessMap()
     {
-        try
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+    public static void InitializeComputeShader()
+    {
+        _roughnessComp = Resources.Load<ComputeShader>("RoughnessCompute");
+        if (_roughnessComp == null)
         {
-            _roughnessComp = Resources.Load<ComputeShader>("RoughnessCompute");
-            if (_roughnessComp == null)
-            {
-                throw new System.NullReferenceException("Failed to load Roughness compute shader. Make sure 'RoughnessCompute.compute' is in a Resources folder.");
-            }
-            _kernelIdx = _roughnessComp.FindKernel("CSMain");
-            if (_kernelIdx < 0)
-            {
-                throw new System.InvalidOperationException("Failed to find 'CSMain' kernel in Roughness compute shader.");
-            }
+            Debug.LogError("Failed to load Roughness compute shader. Make sure 'RoughnessCompute.compute' is in a Resources folder.");
+            return;
         }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error in RoughnessMap initialization: {e.Message}");
-            _roughnessComp = null;
-        }
+        _kernelIdx = _roughnessComp.FindKernel("CSMain");
+        if (_kernelIdx < 0)
+            Debug.LogError("Failed to find 'CSMain' kernel in Roughness compute shader.");
     }
 
     public static void GPUConvertToRoughnessMap(Texture2D baseMap, Action<Texture2D> callback)

@@ -9,6 +9,14 @@ public static class AOMap
 
     static AOMap()
     {
+        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
+        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        if (_useGPU)
+            InitializeComputeShader();        
+    }
+
+    public static void InitializeComputeShader()
+    {
         _aoComp = Resources.Load<ComputeShader>("AOCompute");
         if (_aoComp == null)
         {
