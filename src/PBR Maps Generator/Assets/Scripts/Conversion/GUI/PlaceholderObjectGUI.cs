@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class PlaceholderObjectGUI : MonoBehaviour
 {
@@ -15,7 +13,7 @@ public class PlaceholderObjectGUI : MonoBehaviour
     int meshIndex = 0;
     float minScale = 0.5f, maxScale = 1.5f, timeCheck;
     Vector3 randomDir, dragOrigin;
-    bool isDraggingObject = false, isDraggingSun = false;
+    bool isDraggingObject = false, isDraggingSun = false;    
     private void Start() => AssignRandDir();
     private void Update()
     {
@@ -24,7 +22,9 @@ public class PlaceholderObjectGUI : MonoBehaviour
         ObjectScaleControls();
         SunRotControls();
     }
-    void AssignRandDir() => randomDir = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+    void AssignRandDir() => randomDir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 
+                                                    UnityEngine.Random.Range(-1f, 1f), 
+                                                    UnityEngine.Random.Range(-1f, 1f));
     void CheckDrag()
     {
         if (Input.GetMouseButtonDown(0))
@@ -126,19 +126,24 @@ public class PlaceholderObjectGUI : MonoBehaviour
             objectMaterial.SetTexture("_BumpMap", normalMap);
             objectMaterial.SetFloat("_BumpScale", 1.0f);
         }
-        if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);        
+        if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);
 
         if (specularMap != null && glossinessMap != null)
         {
             objectMaterial.shader = Shader.Find("Standard (Specular setup)");
             objectMaterial.SetTexture("_SpecGlossMap", specularMap);
+            objectMaterial.SetColor("_SpecColor", specularMap.GetPixel(0, 0));
+            objectMaterial.SetFloat("_Glossiness", glossinessMap.GetPixel(0, 0).r);
 
         }
         else if (metallicMap != null && roughnessMap != null)
         {
             objectMaterial.shader = Shader.Find("Standard");
             objectMaterial.SetTexture("_MetallicGlossMap", metallicMap);
+            objectMaterial.SetFloat("_Metallic", 1.0f);
+            objectMaterial.SetFloat("_Glossiness", roughnessMap.GetPixel(0, 0).r);
         }
+
         objectMaterial.shader = objectMaterial.shader;
     }
 #nullable disable

@@ -4,8 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
-using System;
-using UnityEngine.Rendering;
 
 public class FrameGUI : MonoBehaviour
 {
@@ -13,6 +11,7 @@ public class FrameGUI : MonoBehaviour
     [SerializeField] UploadDownload io;
     [SerializeField] PlaceholderObjectGUI pog;
     [SerializeField] UX ux;
+    [SerializeField] Toggle mrToggle, sgToggle;
     public List<MapFrame> mapFrames;
     Dictionary<string, InputMaps> inputMapLabels;
     Dictionary<string, CommonMaps> commonMapLabels;
@@ -114,6 +113,7 @@ public class FrameGUI : MonoBehaviour
             {
                 UpdateFramesBasedOnWorkflow();
                 UpdateMaterialTextures();
+                print("All maps generated");
                 ux.OnImageUploaded();
             }
         }
@@ -276,20 +276,23 @@ public class FrameGUI : MonoBehaviour
     {
         foreach (var map in generatedMaps)
             io.OnDownloadBtnClick(map.Key + "_" + io.uploadImgFileName, io.uploadImgExtension, map.Value);
-    }
-
-    public void OnMRToggleClicked()
+    }   
+    public void onMRSGToggleClicked()
     {
-        AssignLabels(currentInput = InputMaps.BASE);
-        UpdateFramesBasedOnWorkflow();
-        UpdateMaterialTextures();
-    }
-
-    public void OnSGToggleClicked()
-    {
-        AssignLabels(currentInput = InputMaps.DIFFUSE);
-        UpdateFramesBasedOnWorkflow();
-        UpdateMaterialTextures();
+        if (sgToggle.isOn && currentInput != InputMaps.DIFFUSE)
+        {
+            print("Switching to Diffuse workflow");
+            AssignLabels(currentInput = InputMaps.DIFFUSE);
+            UpdateFramesBasedOnWorkflow();
+            UpdateMaterialTextures();
+        }
+        else if (mrToggle.isOn && currentInput != InputMaps.BASE)
+        {
+            print("Switching to Base workflow");
+            AssignLabels(currentInput = InputMaps.BASE);
+            UpdateFramesBasedOnWorkflow();
+            UpdateMaterialTextures();
+        }
     }
 
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
