@@ -53,6 +53,8 @@ public static class GlossinessMap
             glossinessRT.Create();
             _glossinessComp.SetTexture(_kernelIdx, "RoughnessMap", roughnessRT);
             _glossinessComp.SetTexture(_kernelIdx, "GlossinessMap", glossinessRT);
+            _glossinessComp.SetInts("TextureSize", w, h);
+            _glossinessComp.SetBool("FlipY", Application.platform == RuntimePlatform.WebGLPlayer);
             int thrdX = Mathf.CeilToInt(w / 8.0f);
             int thrdY = Mathf.CeilToInt(h / 8.0f);
             _glossinessComp.Dispatch(_kernelIdx, thrdX, thrdY, 1);
