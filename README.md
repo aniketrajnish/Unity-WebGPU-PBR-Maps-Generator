@@ -45,7 +45,6 @@ You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Gener
   </tr>
 </table>
 
-<div align =center>
 PBR maps generated from a single base texture using the tool
 </div>
 
