@@ -244,7 +244,7 @@ These are the results of the performance comparison using a system with an `Inte
 </div>
 
 <div align =center>
-  <img src="https://github.com/user-attachments/assets/98c71243-fd6e-48cf-a1bb-8dbb07eb3bef" alt="plt" style="width: 80%;"/>
+  <img src="https://github.com/user-attachments/assets/b4a7f72f-f147-426e-813a-37ed016df6c1" alt="plt" style="width: 80%;"/>
 </div>
 
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
