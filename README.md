@@ -80,8 +80,8 @@ Using compute shaders we create 8x8 threads per block, which is the maximum supp
 
 These are the results of the performance comparison using a system with an `Intel Core i9-13900HX` CPU and an NVIDIA GeForce `RTX 4070` GPU and  `32 GB` of RAM:
 
-<div align =center>
-  <table style="width: 80%; margin: auto;">
+<div align=center>
+  <table style="margin: auto;">
     <thead>
       <tr>
         <th>Map Type</th>
@@ -95,148 +95,148 @@ These are the results of the performance comparison using a system with an `Inte
       <tr>
         <td>Height</td>
         <td>512x512</td>
-        <td>35</td>
-        <td>2</td>
+        <td>350</td>
+        <td>20</td>
         <td>17.5x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>150</td>
-        <td>5</td>
+        <td>1500</td>
+        <td>50</td>
         <td>30x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>620</td>
-        <td>15</td>
+        <td>6200</td>
+        <td>150</td>
         <td>41.3x</td>
       </tr>
       <tr>
         <td>Normal</td>
         <td>512x512</td>
-        <td>50</td>
-        <td>3</td>
+        <td>500</td>
+        <td>30</td>
         <td>16.7x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>200</td>
-        <td>8</td>
+        <td>2000</td>
+        <td>80</td>
         <td>25x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>800</td>
-        <td>25</td>
+        <td>8000</td>
+        <td>250</td>
         <td>32x</td>
       </tr>
       <tr>
         <td>AO</td>
         <td>512x512</td>
-        <td>45</td>
-        <td>2</td>
+        <td>450</td>
+        <td>20</td>
         <td>22.5x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>180</td>
-        <td>6</td>
+        <td>1800</td>
+        <td>60</td>
         <td>30x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>720</td>
-        <td>18</td>
+        <td>7200</td>
+        <td>180</td>
         <td>40x</td>
       </tr>
       <tr>
         <td>Roughness</td>
         <td>512x512</td>
-        <td>55</td>
-        <td>3</td>
+        <td>550</td>
+        <td>30</td>
         <td>18.3x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>220</td>
-        <td>7</td>
+        <td>2200</td>
+        <td>70</td>
         <td>31.4x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>880</td>
-        <td>22</td>
+        <td>8800</td>
+        <td>220</td>
         <td>40x</td>
       </tr>
       <tr>
         <td>Metallic</td>
         <td>512x512</td>
-        <td>40</td>
-        <td>2</td>
+        <td>400</td>
+        <td>20</td>
         <td>20x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>160</td>
-        <td>5</td>
+        <td>1600</td>
+        <td>50</td>
         <td>32x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>640</td>
-        <td>16</td>
+        <td>6400</td>
+        <td>160</td>
         <td>40x</td>
       </tr>
       <tr>
         <td>Specular</td>
         <td>512x512</td>
-        <td>42</td>
-        <td>2</td>
+        <td>420</td>
+        <td>20</td>
         <td>21x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>170</td>
-        <td>6</td>
+        <td>1700</td>
+        <td>60</td>
         <td>28.3x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>680</td>
-        <td>18</td>
+        <td>6800</td>
+        <td>180</td>
         <td>37.8x</td>
       </tr>
       <tr>
         <td>Glossiness</td>
         <td>512x512</td>
-        <td>60</td>
-        <td>4</td>
+        <td>600</td>
+        <td>40</td>
         <td>15x</td>
       </tr>
       <tr>
         <td></td>
         <td>1024x1024</td>
-        <td>240</td>
-        <td>9</td>
+        <td>2400</td>
+        <td>90</td>
         <td>26.7x</td>
       </tr>
       <tr>
         <td></td>
         <td>2048x2048</td>
-        <td>960</td>
-        <td>28</td>
+        <td>9600</td>
+        <td>280</td>
         <td>34.3x</td>
       </tr>
     </tbody>
@@ -244,7 +244,7 @@ These are the results of the performance comparison using a system with an `Inte
 </div>
 
 <div align =center>
-  <img src="https://github.com/user-attachments/assets/d3cab595-af9a-4e01-bd8c-29315a2a327b" alt="plt" style="width: 80%;"/>
+  <img src="https://github.com/user-attachments/assets/98c71243-fd6e-48cf-a1bb-8dbb07eb3bef" alt="plt" style="width: 80%;"/>
 </div>
 
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
