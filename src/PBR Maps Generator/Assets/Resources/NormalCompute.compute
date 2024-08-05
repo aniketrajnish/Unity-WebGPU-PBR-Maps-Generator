@@ -5,7 +5,7 @@ RWTexture2D<unorm float4> NormalMap;
 uint2 TextureSize;
 bool FlipY;
 
-float GetPixelHeight(int2 uv)
+float GetPixelHeight(int2 uv) // use heightmap to get pixel height
 {
     return HeightMap[clamp(uv, int2(0, 0), TextureSize - 1)];
 }
@@ -20,12 +20,12 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     if (FlipY)
         uv.y = TextureSize.y - 1 - uv.y;
 
-    float left = GetPixelHeight(int2(uv.x - 1, uv.y));
-    float right = GetPixelHeight(int2(uv.x + 1, uv.y));
+    float left = GetPixelHeight(int2(uv.x - 1, uv.y));  // get height value from surrounding pixels,
+    float right = GetPixelHeight(int2(uv.x + 1, uv.y)); // by using the heightmap
     float up = GetPixelHeight(int2(uv.x, uv.y - 1));
     float down = GetPixelHeight(int2(uv.x, uv.y + 1));
 
-    float3 normal = normalize(float3(left - right, up - down, 2.0)) * 5.0;
+    float3 normal = normalize(float3(left - right, up - down, 2.0)) * 5.0; // calculate normal using height values
     normal = (normal + 1.0) * 0.5;
 
     NormalMap[id.xy] = float4(normal, 1.0);

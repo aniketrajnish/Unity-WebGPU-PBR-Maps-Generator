@@ -13,6 +13,6 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         uv.y = TextureSize.y - 1 - uv.y;
     
     float4 roughness = RoughnessMap[uv];
-    float glossiness = 1.0 - roughness.r; // Assuming roughness is stored in the red channel
+    float glossiness = 1.0 - roughness.r; // invert the roughness to get glossiness
     GlossinessMap[id.xy] = float4(glossiness, glossiness, glossiness, 1.0);
 }

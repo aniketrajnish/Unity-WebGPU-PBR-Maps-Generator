@@ -1,6 +1,9 @@
-using System;
 using UnityEngine;
 
+/// <summary>
+/// Manages the 3D object display and interaction for the PBR Maps Generator.
+/// This class handles object rotation, scaling, mesh switching, and material updates.
+/// </summary>
 public class PlaceholderObjectGUI : MonoBehaviour
 {
     [SerializeField] float rotSpeed = 100f, dragSpeed = 100f, scaleSpeed = 100f;
@@ -136,7 +139,7 @@ public class PlaceholderObjectGUI : MonoBehaviour
         }
         if (aoMap != null) objectMaterial.SetTexture("_OcclusionMap", aoMap);
 
-        if (specularMap != null && glossinessMap != null)
+        if (specularMap != null && glossinessMap != null) // needs more thought ;]
         {
             objectMaterial.shader = Shader.Find("Standard (Specular setup)");
             objectMaterial.SetTexture("_SpecGlossMap", specularMap);
@@ -144,7 +147,7 @@ public class PlaceholderObjectGUI : MonoBehaviour
             objectMaterial.SetFloat("_Glossiness", .2f);
 
         }
-        else if (metallicMap != null && roughnessMap != null)
+        else if (metallicMap != null && roughnessMap != null) // this too
         {
             objectMaterial.shader = Shader.Find("Standard");
             objectMaterial.SetTexture("_MetallicGlossMap", metallicMap);

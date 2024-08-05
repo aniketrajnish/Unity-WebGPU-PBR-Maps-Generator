@@ -1,19 +1,29 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using System;
-using Unity.VisualScripting;
 
+/// <summary>
+/// Generates a height map from a base map texture.
+/// Initializes the compute shader if the device supports it. (has a GPU that can support 8x8 threads per block)
+/// </summary>
 public static class HeightMap
 {
     private static ComputeShader _heightComp;
     private static int _kernelIdx;
 
+    /// <summary>
+    /// When the class is initialized, check if the device has a GPU and initialize the compute shader.
+    /// <!-- This is a static constructor and will only be called once. -->
+    /// </summary>
     static HeightMap()
     {
         bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
+    /// <summary>
+    /// Load the Height compute shader
+    /// </summary>
     public static void InitializeComputeShader()
     {
         _heightComp = Resources.Load<ComputeShader>("HeightCompute");
@@ -27,6 +37,15 @@ public static class HeightMap
             Debug.LogError("Failed to find 'CSMain' kernel in Height compute shader.");
     }
 
+    /// <summary>
+    /// Perfrom the Height conversion on the GPU if available, else use the CPU.
+    /// Uses AsyncGPUReadback as WebGPU does not support ReadPixels.
+    /// We divide the texture into 64 pixel blocks and process them in parallel.
+    /// We invert the Y axis for WebGPU as it is renderes on render texture upside down.
+    /// </summary>
+    /// <!-- This is an async operation and will return the Height map in the callback. -->
+    /// <param name="baseMap">The base map (Texture2D) to convert to Height.</param>
+    /// <param name="callback">The callback to return the Height map.</param>
     public static void GPUConvertToHeightMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         bool _useGPU = GPUUtility.useGPU;
@@ -73,7 +92,14 @@ public static class HeightMap
             callback(heightMap);
         });
     }
-
+    /// <summary>
+    /// Takes a base map, iterates over each pixel and converts it to a grayscale value.
+    /// <!-- This is a CPU bound operation and is not recommended for large textures. -->
+    /// </summary>
+    /// <parm name="baseMap">The base map to convert to Glossiness.</param>
+    /// <returns>
+    /// The Height map (Texture2D) generated from the base map.
+    /// </returns>
     public static Texture2D CPUConvertToHeightMap(Texture2D baseMap)
     {
         Texture2D heightMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);

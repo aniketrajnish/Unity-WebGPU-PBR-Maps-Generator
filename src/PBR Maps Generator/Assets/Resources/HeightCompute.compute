@@ -12,6 +12,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     if (FlipY)
         uv.y = TextureSize.y - 1 - uv.y;
     float4 color = BaseMap[uv];
-    float height = color.r * 0.299 + color.g * 0.587 + color.b * 0.114; // greyscale conversion
+    float height = color.r * 0.299 + color.g * 0.587 + color.b * 0.114; // simply greyscale conversion
     HeightMap[id.xy] = float4(height, height, height, 1);
 }

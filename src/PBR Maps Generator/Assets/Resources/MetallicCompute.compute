@@ -5,7 +5,7 @@ RWTexture2D<unorm float4> MetallicMap;
 uint2 TextureSize;
 bool FlipY;
 
-float3 RGBtoHSV(float3 c)
+float3 RGBtoHSV(float3 c) // from https://stackoverflow.com/a/17897228
 {
     float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     float4 p = lerp(float4(c.bg, K.wz), float4(c.gb, K.xy), step(c.b, c.g));
@@ -24,8 +24,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         uv.y = TextureSize.y - 1 - uv.y;
     float4 baseCol = BaseMap[uv];
     float3 hsv = RGBtoHSV(baseCol.rgb);
-    float sat = hsv.y;
+    float sat = hsv.y; 
     float grayscale = dot(baseCol.rgb, float3(0.299, 0.587, 0.114));
-    float metallic = saturate(grayscale * (1.0 - sat));
+    float metallic = saturate(grayscale * (1.0 - sat)); // use saturation to determine metallic value
     MetallicMap[id.xy] = float4(metallic, metallic, metallic, 1.0);
 }

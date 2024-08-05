@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 
+/// <summary>
+/// This class enables execution of actions on the Unity main thread.
+/// This is crucial for WebGPU operations that need to interact with Unity's main thread.
+/// </summary>
 public class UnityMainThreadDispatcher : MonoBehaviour
-{
+{    
     private static readonly Queue<Action> _executionQueue = new Queue<Action>();
 
     private static UnityMainThreadDispatcher _instance = null;
@@ -30,33 +34,24 @@ public class UnityMainThreadDispatcher : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
-        else if (_instance != this)
-        {
-            Destroy(gameObject);
-        }
+        else if (_instance != this)        
+            Destroy(gameObject);        
     }
 
     void Update()
     {
         lock (_executionQueue)
         {
-            while (_executionQueue.Count > 0)
-            {
-                _executionQueue.Dequeue().Invoke();
-            }
+            while (_executionQueue.Count > 0)            
+                _executionQueue.Dequeue().Invoke();            
         }
     }
 
     public void Enqueue(Action action)
     {
-        lock (_executionQueue)
-        {
-            _executionQueue.Enqueue(action);
-        }
+        lock (_executionQueue)        
+            _executionQueue.Enqueue(action);        
     }
 
-    public void EnqueueCoroutine(IEnumerator routine)
-    {
-        Enqueue(() => StartCoroutine(routine));
-    }
+    public void EnqueueCoroutine(IEnumerator routine) => Enqueue(() => StartCoroutine(routine));
 }

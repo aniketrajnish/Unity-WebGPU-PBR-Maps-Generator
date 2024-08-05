@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+// to make it artist-friendly ;)
 using UnityEngine;
 
 public class UX : MonoBehaviour

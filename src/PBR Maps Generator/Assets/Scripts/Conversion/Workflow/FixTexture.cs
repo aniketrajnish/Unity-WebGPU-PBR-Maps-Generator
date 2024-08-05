@@ -1,3 +1,4 @@
+// note: No longer used, but kept for reference
 using UnityEngine;
 public static class FixTexture
 {

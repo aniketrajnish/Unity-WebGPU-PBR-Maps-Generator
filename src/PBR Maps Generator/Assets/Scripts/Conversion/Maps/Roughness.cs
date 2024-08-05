@@ -2,17 +2,29 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 
+/// <summary>
+/// Generates a roughness map from a base map.
+/// Initializes the compute shader if the device supports it. (has a GPU that can support 8x8 threads per block)
+/// </summary>
 public static class RoughnessMap
 {
     private static ComputeShader _roughnessComp;
     private static int _kernelIdx;
 
+    /// <summary>
+    /// When the class is initialized, check if the device has a GPU and initialize the compute shader.
+    /// <!-- This is a static constructor and will only be called once. -->
+    /// </summary>
     static RoughnessMap()
     {
         bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
+
+    /// <summary>
+    /// Load the Roughness compute shader
+    /// </summary>
     public static void InitializeComputeShader()
     {
         _roughnessComp = Resources.Load<ComputeShader>("RoughnessCompute");
@@ -26,6 +38,15 @@ public static class RoughnessMap
             Debug.LogError("Failed to find 'CSMain' kernel in Roughness compute shader.");
     }
 
+    /// <summary>
+    /// Perfrom the Roughness conversion on the GPU if available, else use the CPU.
+    /// Uses AsyncGPUReadback as WebGPU does not support ReadPixels.
+    /// We divide the texture into 64 pixel blocks and process them in parallel.
+    /// We invert the Y axis for WebGPU as it is renderes on render texture upside down.
+    /// </summary>
+    /// <!-- This is an async operation and will return the Roughness map in the callback. -->
+    /// <param name="baseMap">The base map (Texture2D) to convert to Roughness.</param>
+    /// <param name="callback">The callback to return the Roughness map.</param>
     public static void GPUConvertToRoughnessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         bool _useGPU = GPUUtility.useGPU;
@@ -72,7 +93,17 @@ public static class RoughnessMap
             callback(roughnessMap);
         });
     }
-
+    /// <summary>
+    /// Takes a base map, iterate over each pixel,
+    /// for each pixel, iterate over each of its neighbors, 
+    /// calculate the sum of the absolute difference between the center pixel and its neighbors,
+    /// divide the sum by the number of neighbors to get the roughness value.
+    /// <!-- This is a CPU bound operation and is not recommended for large textures. -->
+    /// </summary>
+    /// <param name="baseMap">The base map (Texture2D) to convert to Roughness.</param>
+    /// <returns>
+    /// The Roughness map (Texture2D) generated from the base map.
+    /// </returns>
     public static Texture2D CPUConvertToRoughnessMap(Texture2D baseMap)
     {
         Texture2D roughnessMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);

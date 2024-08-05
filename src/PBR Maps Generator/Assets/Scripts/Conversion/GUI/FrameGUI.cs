@@ -5,6 +5,10 @@ using TMPro;
 using UnityEngine.UI;
 using System.Linq;
 
+/// <summary>
+/// Manages the GUI of map frames and their textures.
+/// It also handles of the functionality of buttons and toggles associated with the map frames.
+/// </summary>
 public class FrameGUI : MonoBehaviour
 {
     [SerializeField] List<GameObject> mapFrameGOs;
@@ -30,7 +34,7 @@ public class FrameGUI : MonoBehaviour
         InitializeFrames();
         AssignLabels(currentInput);
     }
-    void InitDeviceSettings()
+    void InitDeviceSettings() // do it at start to determine if gpu available
     {
         bool isGPUAvailable = GPUUtility.IsGPUAvailable();
 
@@ -85,10 +89,8 @@ public class FrameGUI : MonoBehaviour
                             generatedMaps[mapName]
                         );
                     }
-                    else
-                    {
-                        Debug.LogWarning($"Map {mapName} not found in generatedMaps dictionary.");
-                    }
+                    else                    
+                        Debug.LogWarning($"Map {mapName} not found in generatedMaps dictionary.");                    
                 });
             }
         }
@@ -137,10 +139,9 @@ public class FrameGUI : MonoBehaviour
                 generatedMaps["Height"] = heightMap;
                 UpdateFrame(heightMap, 1);                
             }
-            else
-            {
+            else            
                 Debug.LogError("Failed to generate Height map");
-            }
+            
             CheckAllMapsGenerated();
         });
 
@@ -151,10 +152,9 @@ public class FrameGUI : MonoBehaviour
                 generatedMaps["Normal"] = normalMap;
                 UpdateFrame(normalMap, 2);
             }
-            else
-            {
+            else            
                 Debug.LogError("Failed to generate Normal map");
-            }
+            
             CheckAllMapsGenerated();
         });       
 
@@ -165,61 +165,48 @@ public class FrameGUI : MonoBehaviour
                 generatedMaps["AO"] = aoMap;
                 UpdateFrame(aoMap, 3);
             }
-            else
-            {
+            else            
                 Debug.LogError("Failed to generate AO map");
-            }
+            
             CheckAllMapsGenerated();
         });
 
         MetallicMap.GPUConvertToMetallicMap(inputMap, (metallicMap) =>
         {
-            if (metallicMap != null)
-            {
-                generatedMaps["Metallic"] = metallicMap;
-            }
-            else
-            {
+            if (metallicMap != null)            
+                generatedMaps["Metallic"] = metallicMap;            
+            else            
                 Debug.LogError("Failed to generate Metallic map");
-            }
+            
             CheckAllMapsGenerated();
         });
 
         RoughnessMap.GPUConvertToRoughnessMap(inputMap, (roughnessMap) =>
         {
-            if (roughnessMap != null)
-            {
-                generatedMaps["Roughness"] = roughnessMap;                
-            }
-            else
-            {
+            if (roughnessMap != null)            
+                generatedMaps["Roughness"] = roughnessMap;   
+            else            
                 Debug.LogError("Failed to generate Roughness map");
-            }
+            
             CheckAllMapsGenerated();
         });
 
         SpecularMap.GPUConvertToSpecularMap(inputMap, (specularMap) =>
         {
-            if (specularMap != null)
-            {
+            if (specularMap != null)            
                 generatedMaps["Specular"] = specularMap;
-            }
-            else
-            {
+            else            
                 Debug.LogError("Failed to generate Specular map");
-            }
+            
             CheckAllMapsGenerated();
         });
         GlossinessMap.GPUConvertToGlossinessMap(inputMap, (glossinessMap) =>
         {
-            if (glossinessMap != null)
-            {
-                generatedMaps["Glossiness"] = glossinessMap;
-            }
-            else
-            {
+            if (glossinessMap != null)            
+                generatedMaps["Glossiness"] = glossinessMap;            
+            else            
                 Debug.LogError("Failed to generate Glossiness map");
-            }
+            
             CheckAllMapsGenerated();
         });
     }
@@ -245,11 +232,9 @@ public class FrameGUI : MonoBehaviour
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            if (mapFrames[frameIndex].mapImage.sprite.texture != texture)
-            {
+            if (mapFrames[frameIndex].mapImage.sprite.texture != texture)            
                 mapFrames[frameIndex].mapImage.sprite = Sprite.Create(texture,
-                    new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            }
+                    new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));            
         });
     }
 
@@ -293,14 +278,12 @@ public class FrameGUI : MonoBehaviour
     {
         if (sgToggle.isOn && currentInput != InputMaps.DIFFUSE)
         {
-            print("Switching to Diffuse workflow");
             AssignLabels(currentInput = InputMaps.DIFFUSE);
             UpdateFramesBasedOnWorkflow();
             UpdateMaterialTextures();
         }
         else if (mrToggle.isOn && currentInput != InputMaps.BASE)
         {
-            print("Switching to Base workflow");
             AssignLabels(currentInput = InputMaps.BASE);
             UpdateFramesBasedOnWorkflow();
             UpdateMaterialTextures();
@@ -309,16 +292,10 @@ public class FrameGUI : MonoBehaviour
 
     public void onGPUCPUToggleClicked()
     {
-        if (gpuToggle.isOn && !GPUUtility.useGPU)
-        {
-            GPUUtility.SetUseGPU(true);
-            print("GPU selected");
-        }
-        else if (cpuToggle.isOn && GPUUtility.useGPU)
-        {
-            GPUUtility.SetUseGPU(false);
-            print("CPU selected");
-        }
+        if (gpuToggle.isOn && !GPUUtility.useGPU)        
+            GPUUtility.SetUseGPU(true);        
+        else if (cpuToggle.isOn && GPUUtility.useGPU)        
+            GPUUtility.SetUseGPU(false);        
     }
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
 }

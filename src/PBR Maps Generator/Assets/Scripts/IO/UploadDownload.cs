@@ -7,16 +7,18 @@ using System;
 #if UNITY_EDITOR
 using UnityEditor; 
 #endif
-
+/// <summary>
+/// Handles uploading and downloading the generated PBR in both WebGL and Editor.
+/// </summary>
 public class UploadDownload : MonoBehaviour
 {
     public Image uploadImgHolder;
     public string uploadImgFileName, uploadImgExtension;
     public event Action<Texture2D> OnImageLoaded;
 
-    [DllImport("__Internal")]
+    [DllImport("__Internal")] // ref to js function to upload image in the browser
     private static extern void jsUploadImage();
-    [DllImport("__Internal")]
+    [DllImport("__Internal")] // ref to js function to download image in the browser
     private static extern void jsDownloadImage(string base64Data, string fileName);
     public void OnUploadBtnClick()
     {
@@ -71,10 +73,8 @@ public class UploadDownload : MonoBehaviour
             else
                 Debug.LogError("Failed to load image");
         }
-        else
-        {
-            Debug.LogError("Error processing uploaded file data");
-        }
+        else        
+            Debug.LogError("Error processing uploaded file data");        
     }
     public void DownloadImage(Texture2D imgToDownload, string fileName, string extension)
     {

@@ -2,17 +2,29 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 
+/// <summary>
+/// Generates a specular map from a base map.
+/// Initializes the compute shader if the device supports it. (has a GPU that can support 8x8 threads per block)
+/// </summary>
 public static class SpecularMap
 {
     private static ComputeShader _specularComp;
     private static int _kernelIdx;
 
+    /// <summary>
+    /// When the class is initialized, check if the device has a GPU and initialize the compute shader.
+    /// <!-- This is a static constructor and will only be called once. -->
+    /// </summary>
     static SpecularMap()
     {
         bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
+
+    /// <summary>
+    /// Load the Specular compute shader
+    /// </summary>
     public static void InitializeComputeShader()
     {
         _specularComp = Resources.Load<ComputeShader>("SpecularCompute");
@@ -26,6 +38,15 @@ public static class SpecularMap
             Debug.LogError("Failed to find 'CSMain' kernel in Specular compute shader.");
     }
 
+    /// <summary>
+    /// Perfrom the Specular conversion on the GPU if available, else use the CPU.
+    /// Uses AsyncGPUReadback as WebGPU does not support ReadPixels.
+    /// We divide the texture into 64 pixel blocks and process them in parallel.
+    /// We invert the Y axis for WebGPU as it is renderes on render texture upside down.
+    /// </summary>
+    /// <!-- This is an async operation and will return the Specular map in the callback. -->
+    /// <param name="baseMap">The base map (Texture2D) to convert to Specular.</param>
+    /// <param name="callback">The callback to return the Specular map.</param>
     public static void GPUConvertToSpecularMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         bool _useGPU = GPUUtility.useGPU;
@@ -72,7 +93,16 @@ public static class SpecularMap
             callback(specularMap);
         });
     }
-
+    /// <summary>
+    /// Takes a base map, iterate over each pixel,
+    /// calculate the reflectivity based on the grayscale value of the pixel,
+    /// multiply the base color by the reflectivity to get the specular color.
+    /// <!-- This is a CPU bound operation and is not recommended for large textures. -->
+    /// </summary>
+    /// <param name="baseMap">The base map (Texture2D) to convert to Specular.</param>
+    /// <returns>
+    /// The Specular map (Texture2D) generated from the base map.
+    /// </returns>
     private static Texture2D CPUConvertToSpecularMap(Texture2D baseMap)
     {
         Texture2D specularMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);

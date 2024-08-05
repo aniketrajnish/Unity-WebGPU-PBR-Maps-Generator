@@ -1,6 +1,11 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+
+/// <summary>
+/// A struct to hold the map frame components.
+/// The map frame displays a map image, label, and button for each PBR map.
+/// </summary>
 public struct MapFrame
 {
     public Image mapImage;

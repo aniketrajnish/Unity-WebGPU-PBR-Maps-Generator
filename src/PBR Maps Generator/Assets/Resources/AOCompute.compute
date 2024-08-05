@@ -9,7 +9,7 @@ bool FlipY;
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     uint2 uv = id.xy;
-    if (FlipY)
+    if (FlipY) 
         uv.y = TextureSize.y - 1 - uv.y;
     
     float4 color = BaseMap[uv];

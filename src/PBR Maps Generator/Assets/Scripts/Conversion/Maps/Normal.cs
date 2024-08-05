@@ -2,17 +2,29 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 
+/// <summary>
+/// Generates a normal map from a height map.
+/// Initializes the compute shader if the device supports it. (has a GPU that can support 8x8 threads per block)
+/// </summary>
 public static class NormalMap
 {
     private static ComputeShader _normalComp;
     private static int _kernelIdx;
 
+    /// <summary>
+    /// When the class is initialized, check if the device has a GPU and initialize the compute shader.
+    /// <!-- This is a static constructor and will only be called once. -->
+    /// </summary>
     static NormalMap()
     {
         bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
+
+    /// <summary>
+    /// Load the Normal compute shader
+    /// </summary>
     public static void InitializeComputeShader()
     {
         _normalComp = Resources.Load<ComputeShader>("NormalCompute");
@@ -26,6 +38,14 @@ public static class NormalMap
             Debug.LogError("Failed to find 'CSMain' kernel in Normal compute shader.");
     }
 
+    /// <summary>
+    /// Perfrom the Normal conversion on the GPU if available, else use the CPU.
+    /// Uses AsyncGPUReadback as WebGPU does not support ReadPixels.
+    /// We divide the texture into 64 pixel blocks and process them in parallel.
+    /// </summary>
+    /// <!-- This is an async operation and will return the Normal map in the callback. -->
+    /// <param name="baseMap">The base map (Texture2D) to convert to Normal.</param>
+    /// <param name="callback">The callback to return the Normal map.</param>
     public static void GPUConvertToNormalMap(Texture2D baseMap, Action<Texture2D> callback)
     {
         bool _useGPU = GPUUtility.useGPU;
@@ -83,6 +103,17 @@ public static class NormalMap
         });
     }
 
+    /// <summary>
+    /// Take a base map, iterate through each pixel, 
+    /// get the height value of the surrounding pixels by sampling the height map, 
+    /// and calculate the normal from the height values.
+    /// We invert the Y axis for WebGPU as it is renderes on render texture upside down.
+    /// <!-- This is a CPU bound operation and is not recommended for large textures. -->
+    /// </summary>
+    /// <param name="baseMap">The base map to convert to Normal.</param>
+    /// <returns>
+    /// The Normal map (Texture2D) generated from the base map.
+    /// </returns>
     private static Texture2D CPUConvertToNormalMap(Texture2D baseMap)
     {
         Texture2D heightMap = HeightMap.CPUConvertToHeightMap(baseMap);
@@ -103,7 +134,15 @@ public static class NormalMap
         normalMap.Apply();
         return normalMap;
     }
-
+    /// <summary>
+    /// Get the grayscale value of a pixel in a texture.
+    /// </summary>
+    /// <param name="tex">The texture to sample.</param>
+    /// <param name="x">The x position of the pixel.</param>
+    /// <param name="y">The y position of the pixel.</param>
+    /// <returns>
+    /// The grayscale value of the pixel.
+    /// </returns>
     private static float GetPixelHeight(Texture2D tex, int x, int y)
     {
         x = Mathf.Clamp(x, 0, tex.width - 1);
