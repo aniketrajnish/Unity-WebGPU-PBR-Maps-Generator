@@ -272,9 +272,10 @@ private void ReadbackTexture(Texture texture, Action<Texture2D> callback)
 This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer.
 
 ## Installation
-- Clone the repository or download the `.unitypackage` from [here]().
-- Open the project in `Unity 2023.3` or later. 
-- Make sure to enable the `WebGPU` backend to take advantage of GPU acceleration. Instructions here - [https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493](https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493)
+- Clone the repository or download the `.unitypackage` from [here](https://github.com/aniketrajnish/PBR-Maps-Generator/releases/tag/v001).
+- Open/Import the project in `Unity 2023.3` or later.
+- If you're using the `.unitypackage`, make sure to create a project using the `Built-In Render Pipeline` and import `TextMeshPro`.
+- Make sure to enable the `WebGPU` backend to take advantage of GPU acceleration. Instructions [here](https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493).
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Currently working on better algorithms for generating the maps that give better results.
