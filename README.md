@@ -80,7 +80,7 @@ Using compute shaders we create 8x8 threads per block, which is the maximum supp
 
 These are the results of the performance comparison using a system with an `Intel Core i9-13900HX` CPU and an NVIDIA GeForce `RTX 4070` GPU and  `32 GB` of RAM:
 
-<div style="text-align: center;">
+<div style="align: center;">
   <table style="width: 80%; margin: auto;">
     <thead>
       <tr>
