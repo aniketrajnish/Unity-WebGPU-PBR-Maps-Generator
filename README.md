@@ -1,5 +1,5 @@
 # Unity-WebGPU-PBR-Maps-Generator
-Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `Unity` 6's `WebGPU` backend by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. 
+Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `WebGPU` by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. 
 
 You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/](https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/). <br> The page might take a while to load for the first time but once it's cached, it should load quickly on subsequent visits.
 
@@ -271,7 +271,7 @@ private void ReadbackTexture(Texture texture, Action<Texture2D> callback)
     });
 }
 ```
-This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer.
+This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer. You can see an example implementation [here](https://github.com/aniketrajnish/Unity-WebGPU-PBR-Maps-Generator/blob/67848f192f908f0bf46b07d202f42ced5e679933/src/PBR%20Maps%20Generator/Assets/Scripts/Conversion/Maps/AO.cs#L41).
 
 ## Installation
 - Clone the repository or download the `.unitypackage` from [here](https://github.com/aniketrajnish/PBR-Maps-Generator/releases/tag/v001).
