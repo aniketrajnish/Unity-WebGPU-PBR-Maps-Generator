@@ -102,6 +102,8 @@ These are the results of the performance comparison using a system with an `Inte
 |           | 1024x1024  | 240           | 9             | 26.7x          |
 |           | 2048x2048  | 960           | 28            | 34.3x          |
 
+![plt](https://github.com/user-attachments/assets/c8262bd7-1e78-480d-b820-724c1b5cae8d)
+
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
 
 ## Contributing
