@@ -23,14 +23,14 @@ You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Gener
 
 <table>
   <tr>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/047ddb0b-71a4-40d1-93ff-5210c8fe4690" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/070bda0c-1716-4925-9bad-e8c8748e5bb4" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/5eaa7e0a-652e-49f0-9435-1829bf3415b5" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/8f51a7fd-3863-4125-b90d-4b0aeff0b94c" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/9fbdd95c-32b6-481b-9670-71a8d0398cc8" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/3ce171b2-579f-4c6e-8dfa-fbad3e6da583" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/5d214885-05fe-4a81-ab73-839502ab57a2" width="100"></td>
-    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/101e1d5e-b990-4892-ae25-53c024d9e2b7" width="100"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/047ddb0b-71a4-40d1-93ff-5210c8fe4690" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/070bda0c-1716-4925-9bad-e8c8748e5bb4" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/5eaa7e0a-652e-49f0-9435-1829bf3415b5" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/8f51a7fd-3863-4125-b90d-4b0aeff0b94c" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/9fbdd95c-32b6-481b-9670-71a8d0398cc8" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/3ce171b2-579f-4c6e-8dfa-fbad3e6da583" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/5d214885-05fe-4a81-ab73-839502ab57a2" width="75"></td>
+    <td style="width: 12.5%;"><img src="https://github.com/user-attachments/assets/101e1d5e-b990-4892-ae25-53c024d9e2b7" width="75"></td>
   </tr>
   <tr>
     <td style="width: 12.5%;">Base</td>
