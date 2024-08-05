@@ -1,7 +1,9 @@
 # PBR-Maps-Generator
 Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `Unity` 6's `WebGPU` backend by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. You can try out the project here- [https://makra.wtf/PBR-Maps-Generator/](https://makra.wtf/PBR-Maps-Generator/).
 
-![image](https://github.com/user-attachments/assets/b10597ab-970a-427a-8fbe-e86f4d9d6726)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/b10597ab-970a-427a-8fbe-e86f4d9d6726" alt="image" style="width: 80%;"/>
+</div>
 
 ## Features
 - Generate various PBR maps from a single base texture:
@@ -78,31 +80,172 @@ Using compute shaders we create 8x8 threads per block, which is the maximum supp
 
 These are the results of the performance comparison using a system with an `Intel Core i9-13900HX` CPU and an NVIDIA GeForce `RTX 4070` GPU and  `32 GB` of RAM:
 
-| Map Type  | Resolution | CPU Time (ms) | GPU Time (ms) | Speedup Factor |
-|-----------|------------|---------------|---------------|----------------|
-| Height    | 512x512    | 35            | 2             | 17.5x          |
-|           | 1024x1024  | 150           | 5             | 30x            |
-|           | 2048x2048  | 620           | 15            | 41.3x          |
-| Normal    | 512x512    | 50            | 3             | 16.7x          |
-|           | 1024x1024  | 200           | 8             | 25x            |
-|           | 2048x2048  | 800           | 25            | 32x            |
-| AO        | 512x512    | 45            | 2             | 22.5x          |
-|           | 1024x1024  | 180           | 6             | 30x            |
-|           | 2048x2048  | 720           | 18            | 40x            |
-| Roughness | 512x512    | 55            | 3             | 18.3x          |
-|           | 1024x1024  | 220           | 7             | 31.4x          |
-|           | 2048x2048  | 880           | 22            | 40x            |
-| Metallic  | 512x512    | 40            | 2             | 20x            |
-|           | 1024x1024  | 160           | 5             | 32x            |
-|           | 2048x2048  | 640           | 16            | 40x            |
-| Specular  | 512x512    | 42            | 2             | 21x            |
-|           | 1024x1024  | 170           | 6             | 28.3x          |
-|           | 2048x2048  | 680           | 18            | 37.8x          |
-| Glossiness| 512x512    | 60            | 4             | 15x            |
-|           | 1024x1024  | 240           | 9             | 26.7x          |
-|           | 2048x2048  | 960           | 28            | 34.3x          |
+<div style="text-align: center;">
+  <table style="width: 80%; margin: auto;">
+    <thead>
+      <tr>
+        <th>Map Type</th>
+        <th>Resolution</th>
+        <th>CPU Time (ms)</th>
+        <th>GPU Time (ms)</th>
+        <th>Speedup Factor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Height</td>
+        <td>512x512</td>
+        <td>35</td>
+        <td>2</td>
+        <td>17.5x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>150</td>
+        <td>5</td>
+        <td>30x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>620</td>
+        <td>15</td>
+        <td>41.3x</td>
+      </tr>
+      <tr>
+        <td>Normal</td>
+        <td>512x512</td>
+        <td>50</td>
+        <td>3</td>
+        <td>16.7x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>200</td>
+        <td>8</td>
+        <td>25x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>800</td>
+        <td>25</td>
+        <td>32x</td>
+      </tr>
+      <tr>
+        <td>AO</td>
+        <td>512x512</td>
+        <td>45</td>
+        <td>2</td>
+        <td>22.5x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>180</td>
+        <td>6</td>
+        <td>30x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>720</td>
+        <td>18</td>
+        <td>40x</td>
+      </tr>
+      <tr>
+        <td>Roughness</td>
+        <td>512x512</td>
+        <td>55</td>
+        <td>3</td>
+        <td>18.3x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>220</td>
+        <td>7</td>
+        <td>31.4x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>880</td>
+        <td>22</td>
+        <td>40x</td>
+      </tr>
+      <tr>
+        <td>Metallic</td>
+        <td>512x512</td>
+        <td>40</td>
+        <td>2</td>
+        <td>20x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>160</td>
+        <td>5</td>
+        <td>32x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>640</td>
+        <td>16</td>
+        <td>40x</td>
+      </tr>
+      <tr>
+        <td>Specular</td>
+        <td>512x512</td>
+        <td>42</td>
+        <td>2</td>
+        <td>21x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>170</td>
+        <td>6</td>
+        <td>28.3x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>680</td>
+        <td>18</td>
+        <td>37.8x</td>
+      </tr>
+      <tr>
+        <td>Glossiness</td>
+        <td>512x512</td>
+        <td>60</td>
+        <td>4</td>
+        <td>15x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>1024x1024</td>
+        <td>240</td>
+        <td>9</td>
+        <td>26.7x</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2048x2048</td>
+        <td>960</td>
+        <td>28</td>
+        <td>34.3x</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-![plt](https://github.com/user-attachments/assets/c8262bd7-1e78-480d-b820-724c1b5cae8d)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/c8262bd7-1e78-480d-b820-724c1b5cae8d" alt="plt" style="width: 80%;"/>
+</div>
 
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
 
