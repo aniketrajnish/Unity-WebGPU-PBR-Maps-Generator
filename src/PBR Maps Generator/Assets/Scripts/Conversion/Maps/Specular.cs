@@ -9,8 +9,7 @@ public static class SpecularMap
 
     static SpecularMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -29,7 +28,8 @@ public static class SpecularMap
 
     public static void GPUConvertToSpecularMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_specularComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_specularComp == null || !_useGPU)
         {
             callback(CPUConvertToSpecularMap(baseMap));
             return;

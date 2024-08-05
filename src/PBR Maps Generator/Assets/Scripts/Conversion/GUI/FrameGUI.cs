@@ -11,7 +11,7 @@ public class FrameGUI : MonoBehaviour
     [SerializeField] UploadDownload io;
     [SerializeField] PlaceholderObjectGUI pog;
     [SerializeField] UX ux;
-    [SerializeField] Toggle mrToggle, sgToggle;
+    [SerializeField] Toggle mrToggle, sgToggle, gpuToggle, cpuToggle;
     public List<MapFrame> mapFrames;
     Dictionary<string, InputMaps> inputMapLabels;
     Dictionary<string, CommonMaps> commonMapLabels;
@@ -25,9 +25,21 @@ public class FrameGUI : MonoBehaviour
 
     private void Start()
     {
+        InitDeviceSettings();
         CreateMapLabelDictionaries();
         InitializeFrames();
         AssignLabels(currentInput);
+    }
+    void InitDeviceSettings()
+    {
+        bool isGPUAvailable = GPUUtility.IsGPUAvailable();
+
+        gpuToggle.isOn = isGPUAvailable;
+        cpuToggle.isOn = !isGPUAvailable;
+        gpuToggle.interactable = isGPUAvailable;
+
+        TextMeshProUGUI gpuToggleText = gpuToggle.GetComponentInChildren<TextMeshProUGUI>();
+        gpuToggleText.text = isGPUAvailable ? "GPU (Available)" : "GPU (Not Available)";
     }
 
     void AssignLabels(InputMaps _currentInput)
@@ -295,5 +307,18 @@ public class FrameGUI : MonoBehaviour
         }
     }
 
+    public void onGPUCPUToggleClicked()
+    {
+        if (gpuToggle.isOn && !GPUUtility.useGPU)
+        {
+            GPUUtility.SetUseGPU(true);
+            print("GPU selected");
+        }
+        else if (cpuToggle.isOn && GPUUtility.useGPU)
+        {
+            GPUUtility.SetUseGPU(false);
+            print("CPU selected");
+        }
+    }
     string EnumString(string enumName) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enumName.ToLower().Replace("_", " "));
 }

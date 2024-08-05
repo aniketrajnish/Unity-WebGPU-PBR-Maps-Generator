@@ -9,8 +9,7 @@ public static class AOMap
 
     static AOMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -30,7 +29,8 @@ public static class AOMap
 
     public static void GPUConvertToAOMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_aoComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_aoComp == null || !_useGPU)
         {
             callback(CPUConvertToAOMap(baseMap));
             return;

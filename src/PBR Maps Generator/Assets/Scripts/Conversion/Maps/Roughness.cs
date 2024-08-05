@@ -9,8 +9,7 @@ public static class RoughnessMap
 
     static RoughnessMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -29,7 +28,8 @@ public static class RoughnessMap
 
     public static void GPUConvertToRoughnessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_roughnessComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_roughnessComp == null || !_useGPU)
         {
             callback(CPUConvertToRoughnessMap(baseMap));
             return;

@@ -10,8 +10,7 @@ public static class HeightMap
 
     static HeightMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {( _useGPU ? "available" : "not available" )}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -30,7 +29,8 @@ public static class HeightMap
 
     public static void GPUConvertToHeightMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_heightComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_heightComp == null || !_useGPU)
         {
             callback(CPUConvertToHeightMap(baseMap));
             return;

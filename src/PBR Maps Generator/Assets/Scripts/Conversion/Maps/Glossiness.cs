@@ -9,8 +9,7 @@ public static class GlossinessMap
 
     static GlossinessMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -28,7 +27,8 @@ public static class GlossinessMap
     }
     public static void GPUConvertToGlossinessMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_glossinessComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_glossinessComp == null || !_useGPU)
         {
             callback(CPUConvertToGlossinessMap(baseMap));
             return;

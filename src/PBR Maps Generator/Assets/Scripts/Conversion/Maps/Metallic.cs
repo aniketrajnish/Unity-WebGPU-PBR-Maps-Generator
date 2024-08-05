@@ -9,8 +9,7 @@ public static class MetallicMap
 
     static MetallicMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -29,7 +28,8 @@ public static class MetallicMap
 
     public static void GPUConvertToMetallicMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_metallicComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_metallicComp == null || !_useGPU)
         {
             callback(CPUConvertToMetallicMap(baseMap));
             return;

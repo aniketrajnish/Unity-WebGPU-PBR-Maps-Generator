@@ -9,8 +9,7 @@ public static class NormalMap
 
     static NormalMap()
     {
-        bool _useGPU = GPUUtility.IsGPUComputeAvailable();
-        Debug.Log($"GPU Compute is {(_useGPU ? "available" : "not available")}");
+        bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
             InitializeComputeShader();        
     }
@@ -29,7 +28,8 @@ public static class NormalMap
 
     public static void GPUConvertToNormalMap(Texture2D baseMap, Action<Texture2D> callback)
     {
-        if (_normalComp == null)
+        bool _useGPU = GPUUtility.useGPU;
+        if (_normalComp == null || !_useGPU)
         {
             callback(CPUConvertToNormalMap(baseMap));
             return;
