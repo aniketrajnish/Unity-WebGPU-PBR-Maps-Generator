@@ -249,6 +249,33 @@ These are the results of the performance comparison using a system with an `Inte
 
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
 
+## WebGPU Limitations & Solutions
+One key limitation of `WebGPU` is the lack of support for synchronous GPU readback. To address this, we use `AsyncGPUReadback` instead of the traditional `ReadPixels` method:
+
+```csharp
+private void ReadbackTexture(Texture texture, Action<Texture2D> callback)
+{
+    AsyncGPUReadback.Request(texture, 0, readback =>
+    {
+        if (readback.hasError)
+        {
+            Debug.LogError("GPU readback error detected.");
+            return;
+        }
+        Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+        texture2D.LoadRawTextureData(readback.GetData<byte>());
+        texture2D.Apply();
+        callback(texture2D);
+    });
+}
+```
+This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer.
+
+## Installation
+- Clone the repository or download the `.unitypackage` from [here]().
+- Open the project in `Unity 2023.3` or later. 
+- Make sure to enable the `WebGPU` backend to take advantage of GPU acceleration. Instructions here - [https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493](https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493)
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Currently working on better algorithms for generating the maps that give better results.
 
