@@ -1,7 +1,7 @@
 # PBR-Maps-Generator
 Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `Unity` 6's `WebGPU` backend by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. You can try out the project here- [https://makra.wtf/PBR-Maps-Generator/](https://makra.wtf/PBR-Maps-Generator/).
 
-<div style="text-align: center;">
+<div align =center>
   <img src="https://github.com/user-attachments/assets/b10597ab-970a-427a-8fbe-e86f4d9d6726" alt="image" style="width: 80%;"/>
 </div>
 
@@ -80,7 +80,7 @@ Using compute shaders we create 8x8 threads per block, which is the maximum supp
 
 These are the results of the performance comparison using a system with an `Intel Core i9-13900HX` CPU and an NVIDIA GeForce `RTX 4070` GPU and  `32 GB` of RAM:
 
-<div style="align: center;">
+<div align =center>
   <table style="width: 80%; margin: auto;">
     <thead>
       <tr>
@@ -243,8 +243,8 @@ These are the results of the performance comparison using a system with an `Inte
   </table>
 </div>
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/c8262bd7-1e78-480d-b820-724c1b5cae8d" alt="plt" style="width: 80%;"/>
+<div align =center>
+  <img src="https://github.com/user-attachments/assets/d3cab595-af9a-4e01-bd8c-29315a2a327b" alt="plt" style="width: 80%;"/>
 </div>
 
 As we can see from the table and graph, the GPU method consistently outperforms the CPU method, with the performance gap widening as the texture resolution increases. This demonstrates the scalability and efficiency of compute shaders for texture processing tasks.
