@@ -3,19 +3,30 @@ using UnityEngine.Rendering;
 using System;
 
 public static class AOMap
+    /// <summary>
+    /// Generates an ambient occlusion map from a base map.
+    /// Initializes the compute shader if the device supports it. (has a GPU that can support 64 threads per group)
+    /// </summary>
 {
     private static ComputeShader _aoComp;
     private static int _kernelIdx;
 
     static AOMap()
     {
+        /// <summary>
+        /// When the class is initialized, check if the device has a GPU and initialize the compute shader.
+        /// <!-- This is a static constructor and will only be called once. -->
+        /// </summary>
         bool _useGPU = GPUUtility.useGPU;
         if (_useGPU)
-            InitializeComputeShader();        
+            InitializeComputeShader();          
     }
 
     public static void InitializeComputeShader()
     {
+        /// <summary>
+        /// Load the AO compute shader
+        /// </summary>
         _aoComp = Resources.Load<ComputeShader>("AOCompute");
         if (_aoComp == null)
         {
@@ -29,6 +40,14 @@ public static class AOMap
 
     public static void GPUConvertToAOMap(Texture2D baseMap, Action<Texture2D> callback)
     {
+        /// <summary>
+        /// Perfrom the AO conversion on the GPU if available, else use the CPU.
+        /// Uses AsyncGPUReadback as WebGPU does not support ReadPixels.
+        /// </summary>
+        /// <!-- This is an async operation and will return the AO map in the callback. -->
+        /// <param name="baseMap">The base map (Texture2D) to convert to AO.</param>
+        /// <param name="callback">The callback to return the AO map.</param
+        
         bool _useGPU = GPUUtility.useGPU;
         if (_aoComp == null || !_useGPU)
         {
@@ -76,7 +95,15 @@ public static class AOMap
 
     private static Texture2D CPUConvertToAOMap(Texture2D baseMap)
     {
-        // CPU conversion method remains unchanged
+        /// <summary>
+        /// Take a base map, iterate through each pixel, convert to grayscale and invert the values to get AO.
+        /// <!-- This is a CPU bound operation and is not recommended for large textures. -->
+        /// </summary>
+        /// <param name="baseMap">The base map to convert to AO.</param>
+        /// <returns>
+        /// The AO map (Texture2D) generated from the base map.
+        /// </returns>
+
         Texture2D aoMap = new Texture2D(baseMap.width, baseMap.height, TextureFormat.RGBA32, true);
         for (int y = 0; y < baseMap.height; y++)
         {
