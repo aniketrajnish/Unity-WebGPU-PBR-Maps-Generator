@@ -271,7 +271,7 @@ private void ReadbackTexture(Texture texture, Action<Texture2D> callback)
     });
 }
 ```
-This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer.
+This asynchronous approach ensures compatibility with WebGPU while maintaining efficient GPU-to-CPU data transfer. You can see an example implementation [here](https://github.com/aniketrajnish/Unity-WebGPU-PBR-Maps-Generator/blob/67848f192f908f0bf46b07d202f42ced5e679933/src/PBR%20Maps%20Generator/Assets/Scripts/Conversion/Maps/AO.cs#L41).
 
 ## Installation
 - Clone the repository or download the `.unitypackage` from [here](https://github.com/aniketrajnish/PBR-Maps-Generator/releases/tag/v001).
