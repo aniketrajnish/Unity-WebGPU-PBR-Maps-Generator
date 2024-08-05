@@ -1,5 +1,5 @@
 # Unity-WebGPU-PBR-Maps-Generator
-Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `WebGPU` by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. 
+Helps generate PBR maps from a base/diffuse map depending on the workflow chosen. This project demonstrates the power of `WebGPU` by implementing a Physically Based Rendering (PBR) map generator that runs efficiently in web browsers. It showcases the use of compute shaders for GPU-accelerated texture processing, providing a significant performance boost over traditional CPU-based methods. The output of course is not very fancy, as we don't have access to the real height information of the texture, and we're just making a guess based on the color information, which could be a hit or miss. But it's a good starting point to prototype some PBR textures quickly!
 
 You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/](https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/). <br> The page might take a while to load for the first time but once it's cached, it should load quickly on subsequent visits.
 
@@ -42,7 +42,11 @@ You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Gener
     <td>Specular</td>
     <td>Glossiness</td>
   </tr>
-</table>     
+</table>
+
+<div align =center>
+PBR maps generated from a single base texture using the tool
+</div>
 
 ## WebGPU advantage
 
@@ -303,7 +307,9 @@ This asynchronous approach ensures compatibility with WebGPU while maintaining e
 - Make sure to enable the `WebGPU` backend to take advantage of GPU acceleration. Instructions [here](https://discussions.unity.com/t/early-access-to-the-new-webgpu-backend-in-unity-2023-3/933493).
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Currently working on better algorithms for generating the maps that give better results.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Currently working on-
+- Better algorithms for generating the maps that give better results. 
+- Incorporating deep learning models to estimate the height information from the color information instead of just doing a greyscale conversion.
 
 ## License
 MIT
