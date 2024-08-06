@@ -3,9 +3,7 @@ Helps generate PBR maps from a base/diffuse map depending on the workflow chosen
 
 You can try out the project here- [https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/](https://makra.wtf/Unity-WebGPU-PBR-Maps-Generator/). <br> The page might take a while to load for the first time but once it's cached, it should load quickly on subsequent visits.
 
-<div align =center>
-  <img src="https://github.com/user-attachments/assets/b10597ab-970a-427a-8fbe-e86f4d9d6726" alt="image" style="width: 80%;"/>
-</div>
+https://github.com/user-attachments/assets/ead85097-f6dc-42b5-89a2-8e2ab5d76f4b
 
 ## Features
 - Generate various PBR maps from a single base texture:
@@ -108,6 +106,8 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 Using compute shaders we create 8x8 threads per block, which is the maximum supported by the `WebGPU` backend. This allows us to process 64 pixels in parallel, providing a significant performance boost over the CPU method.
 
 These are the results of the performance comparison using a system with an `Intel Core i9-13900HX` CPU and an NVIDIA GeForce `RTX 4070` GPU and  `32 GB` of RAM:
+
+https://github.com/user-attachments/assets/149acec5-1174-45ce-abce-d7a763bcffad
 
 <div align=center>
   <table style="margin: auto;">
